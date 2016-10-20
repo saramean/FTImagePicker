@@ -11,5 +11,8 @@
 @interface ViewController : UIViewController
 
 
+- (IBAction)OpenImagePicker:(UIControl *)sender;
+
+
 @end
 

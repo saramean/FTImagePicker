@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "FTImagePicker.h"
 
 @interface ViewController ()
 
@@ -26,4 +27,7 @@
 }
 
 
+- (IBAction)OpenImagePicker:(UIControl *)sender {
+    [FTImagePickerManager presentFTImagePicker:self firstShowingController:FTImagePicker];
+}
 @end
