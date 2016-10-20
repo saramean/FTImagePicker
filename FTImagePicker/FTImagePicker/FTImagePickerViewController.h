@@ -14,10 +14,14 @@
 @property (strong, nonatomic) NSMutableArray *allAssets;
 @property (weak, nonatomic) IBOutlet UICollectionView *FTimagePickerCollectionView;
 @property (strong, nonatomic) IBOutlet FTDetailView *FTDetailView;
+@property (nonatomic) CGFloat scaleCriteria;
+@property (nonatomic) NSInteger cellScaleFactor;
 
 
 - (IBAction)backToAlbumLeftEdgePan:(UIScreenEdgePanGestureRecognizer *)sender;
 - (IBAction)backToAlbumBtnClicked:(UIButton *)sender;
 - (IBAction)showDetailCellLongPressed:(UILongPressGestureRecognizer *)sender;
+- (IBAction)cellZoomInOutPinch:(UIPinchGestureRecognizer *)sender;
+
 
 @end

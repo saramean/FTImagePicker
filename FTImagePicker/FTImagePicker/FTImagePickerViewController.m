@@ -25,6 +25,11 @@
     [self.FTDetailView setFrame:[UIScreen mainScreen].bounds];
     [self.FTDetailView.detailCollectionView setFrame:self.FTDetailView.frame];
     
+    //set cell scaleFactor and scale criteria
+    self.scaleCriteria = 1;
+    self.cellScaleFactor = 4;
+    
+    
     //fetch images when app start, doesn't fetch images when loaded from selected album
     if(self.allAssets.count == 0){
         //fetch all images from device
@@ -71,10 +76,10 @@
     return cell;
 }
 
-//set cell size
+//set cell size delegate
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     float screenWidth = [UIScreen mainScreen].bounds.size.width;
-    float cellWidth = (screenWidth-3)/4;
+    float cellWidth = (screenWidth-(self.cellScaleFactor-1))/self.cellScaleFactor;
     return CGSizeMake(cellWidth, cellWidth);
 }
 
@@ -105,5 +110,33 @@
     [self.FTDetailView.detailCollectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
     //show sub view
     [self.view addSubview:self.FTDetailView];
+}
+
+- (IBAction)cellZoomInOutPinch:(UIPinchGestureRecognizer *)sender {
+    CGFloat scale = sender.scale;
+    NSLog(@"scale %f", scale);
+    NSLog(@"criteria %f", self.scaleCriteria);
+    if(sender.state == UIGestureRecognizerStateBegan){
+        self.FTimagePickerCollectionView.scrollEnabled = NO;
+    }
+    else if(sender.state == UIGestureRecognizerStateChanged){
+        if((scale - self.scaleCriteria)* (scale - self.scaleCriteria) > 0.4){
+            if((scale - self.scaleCriteria) > 0 && self.cellScaleFactor > 2){
+                self.cellScaleFactor -= 1;
+                NSLog(@"scaleFactor %ld", (long)self.cellScaleFactor);
+            }
+            else if((scale - self.cellScaleFactor) < 0 && self.cellScaleFactor < 6){
+                self.cellScaleFactor += 1;
+                NSLog(@"scaleFactor %ld", (long)self.cellScaleFactor);
+            }
+            self.scaleCriteria = scale;
+            [self.FTimagePickerCollectionView reloadData];
+        }
+    }
+    else {
+        self.FTimagePickerCollectionView.scrollEnabled = YES;
+        self.scaleCriteria = 1.0;
+    }
+    
 }
 @end

@@ -130,7 +130,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="130" height="126"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eom-H7-K1G">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eom-H7-K1G">
                                                     <frame key="frameInset"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 </imageView>
@@ -146,6 +146,7 @@
                                     <outlet property="delegate" destination="kqN-Lu-1hX" id="95N-Fp-voq"/>
                                     <outletCollection property="gestureRecognizers" destination="4Zq-Wf-JkX" appends="YES" id="nLc-fO-qTF"/>
                                     <outletCollection property="gestureRecognizers" destination="okw-ZB-d2C" appends="YES" id="MLu-1h-0Qw"/>
+                                    <outletCollection property="gestureRecognizers" destination="AhX-qV-Lex" appends="YES" id="6qT-g9-x0c"/>
                                 </connections>
                             </collectionView>
                             <view alpha="0.69999999999999996" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rnd-7c-nEn">
@@ -262,6 +263,11 @@
                         <outlet property="delegate" destination="bkV-ob-btx" id="0xA-HM-4mL"/>
                     </connections>
                 </panGestureRecognizer>
+                <pinchGestureRecognizer id="AhX-qV-Lex">
+                    <connections>
+                        <action selector="cellZoomInOutPinch:" destination="kqN-Lu-1hX" id="hDZ-g0-Tsk"/>
+                    </connections>
+                </pinchGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1288.8" y="89.505247376311857"/>
         </scene>
