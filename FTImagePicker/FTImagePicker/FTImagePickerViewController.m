@@ -26,7 +26,7 @@
     [self.FTDetailView.detailCollectionView setFrame:self.FTDetailView.frame];
     
     //set cell scaleFactor and scale criteria
-    self.scaleCriteria = 1;
+    self.scaleCriteria = 1.0;
     self.cellScaleFactor = 4;
     
     
@@ -116,21 +116,45 @@
     CGFloat scale = sender.scale;
     NSLog(@"scale %f", scale);
     NSLog(@"criteria %f", self.scaleCriteria);
+    CGFloat difference = (scale - self.scaleCriteria)* (scale - self.scaleCriteria);
     if(sender.state == UIGestureRecognizerStateBegan){
         self.FTimagePickerCollectionView.scrollEnabled = NO;
     }
     else if(sender.state == UIGestureRecognizerStateChanged){
-        if((scale - self.scaleCriteria)* (scale - self.scaleCriteria) > 0.4){
+        //Pinch gesture's scale increses or decreses fast when scale is over 1, but very slowly changes in the region below 1.
+        //So it needs to have different action by region(over 1 and below 1)
+        //when scale is below 1, needs to be much more sensitive
+        if(scale <= 1){
+            if(difference > 0.03){
+                NSLog(@"scale %f criteria %f difference %f",scale, self.scaleCriteria, scale - self.scaleCriteria);
+                if((scale - self.scaleCriteria) > 0 && self.cellScaleFactor > 2){
+                    self.cellScaleFactor -= 1;
+                    NSLog(@"scaleFactor %ld", (long)self.cellScaleFactor);
+                    [self.FTimagePickerCollectionView reloadData];
+                }
+                else if((scale - self.scaleCriteria) < 0 && self.cellScaleFactor < 6){
+                    self.cellScaleFactor += 1;
+                    NSLog(@"scaleFactor %ld", (long)self.cellScaleFactor);
+                    [self.FTimagePickerCollectionView reloadData];
+                }
+                self.scaleCriteria = scale;
+            }
+
+        }
+        //when scale is over 1, doesn't need to be sensitive like in the region below 1
+        else if(difference > 0.12){
+            NSLog(@"scale %f criteria %f difference %f",scale, self.scaleCriteria, scale - self.scaleCriteria);
             if((scale - self.scaleCriteria) > 0 && self.cellScaleFactor > 2){
                 self.cellScaleFactor -= 1;
                 NSLog(@"scaleFactor %ld", (long)self.cellScaleFactor);
+                [self.FTimagePickerCollectionView reloadData];
             }
-            else if((scale - self.cellScaleFactor) < 0 && self.cellScaleFactor < 6){
+            else if((scale - self.scaleCriteria) < 0 && self.cellScaleFactor < 6){
                 self.cellScaleFactor += 1;
                 NSLog(@"scaleFactor %ld", (long)self.cellScaleFactor);
+                [self.FTimagePickerCollectionView reloadData];
             }
             self.scaleCriteria = scale;
-            [self.FTimagePickerCollectionView reloadData];
         }
     }
     else {
