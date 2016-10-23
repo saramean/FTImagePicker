@@ -22,6 +22,7 @@
 @property (strong, nonatomic) UICollectionView *ImagePickerCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *detailCollectionView;
 @property (weak, nonatomic) IBOutlet UIButton *selectBtn;
+@property (strong, nonatomic) UIImageView *imageViewForTransition;
 @property (weak, nonatomic) id<FTDetailViewDelegate> delegate;
 
 - (IBAction)dismissViewDownPan:(UIPanGestureRecognizer *)sender;

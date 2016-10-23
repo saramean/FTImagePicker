@@ -121,23 +121,65 @@
 - (IBAction)dismissViewDownPan:(UIPanGestureRecognizer *)sender {
     CGPoint translation = [sender translationInView:self.detailCollectionView];
     if(sender.state == UIGestureRecognizerStateBegan){
+        //make a imageView For transition and configure
+        self.imageViewForTransition = [[UIImageView alloc] initWithFrame:self.ImagePickerCollectionView.bounds];
+        self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
+        //selected cell for get image from it
+        FTDetailViewCollectionViewCell *selectedCell = (FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+        //assign image to imageview
+        self.imageViewForTransition.image = selectedCell.detailImageView.image;
         
     }
     else if(sender.state == UIGestureRecognizerStateChanged){
         
     }
-    else if(sender.state == UIGestureRecognizerStateEnded){
-        if(translation.y > 50 && translation.x < 50){
-            [self removeFromSuperview];
-        }
-    }
     else{
-        
+        //add imageView as subview of Image Picker collection view
+        [self.ImagePickerCollectionView addSubview:self.imageViewForTransition];
+        //Image picker cell for destination point of transition
+        FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+        //hide image in image picker for effect
+        [selectedCellInImagePicker.contentView setAlpha:0.0];
+        //Animation effect
+        [UIView animateWithDuration:0.2 animations:^{
+            [self.imageViewForTransition setFrame:selectedCellInImagePicker.frame];
+            [self setAlpha:0.0];
+        } completion:^(BOOL finished) {
+            self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
+            [self.imageViewForTransition removeFromSuperview];
+            [self removeFromSuperview];
+            //show cell in image picker after transition
+            [selectedCellInImagePicker.contentView setAlpha:1.0];
+        }];
+
     }
 }
 
 - (IBAction)dismissViewBtnClicked:(UIButton *)sender {
-    [self removeFromSuperview];
+    //make a imageView For transition and configure
+    UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:self.ImagePickerCollectionView.bounds];
+    imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
+    //selected cell for get image from it
+    FTDetailViewCollectionViewCell *selectedCell = (FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+    //assign image to imageview
+    imageViewForTransition.image = selectedCell.detailImageView.image;
+    //add imageView as subview of Image Picker collection view
+    [self.ImagePickerCollectionView addSubview:imageViewForTransition];
+    //Image picker cell for destination point of transition
+    FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+    //hide image in image picker for effect
+    [selectedCellInImagePicker.contentView setAlpha:0.0];
+    //Animation effect
+    [UIView animateWithDuration:0.2 animations:^{
+        [imageViewForTransition setFrame:selectedCellInImagePicker.frame];
+        [self setAlpha:0.0];
+    } completion:^(BOOL finished) {
+        imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
+        [imageViewForTransition removeFromSuperview];
+        [self removeFromSuperview];
+        //show cell in image picker after transition
+        [selectedCellInImagePicker.contentView setAlpha:1.0];
+    }];
 }
 
 #pragma mark - select button clicked

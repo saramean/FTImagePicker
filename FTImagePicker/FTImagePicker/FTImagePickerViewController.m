@@ -202,7 +202,7 @@
         [self.FTDetailView setAlpha:0.0];
         [UIView animateWithDuration:0.2 animations:^{
             [self.FTDetailView setAlpha:1];
-            [imageViewForTransition setFrame:CGRectInset(self.FTDetailView.frame, -0.02*CGRectGetWidth(self.FTDetailView.frame), -0.02*CGRectGetHeight(self.FTDetailView.frame)) ];
+            [imageViewForTransition setFrame:CGRectInset(self.FTDetailView.frame, -0.015*CGRectGetWidth(self.FTDetailView.frame), -0.015*CGRectGetHeight(self.FTDetailView.frame)) ];
             imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
         } completion:^(BOOL finished) {
             [imageViewForTransition removeFromSuperview];
