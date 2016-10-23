@@ -19,15 +19,24 @@
     if([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
         UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"FTImagePickerStoryBoard" bundle:nil];
         FTAlbumLIstViewController *albumListViewController = [storyBoard instantiateViewControllerWithIdentifier:@"FTAlbumLIstViewController"];
-        FTImagePickerViewController *imagePickerViewController = [storyBoard instantiateViewControllerWithIdentifier:@"FTImagePickerViewController"];
+        FTImagePickerViewController *FTImagePickerViewController = [storyBoard instantiateViewControllerWithIdentifier:@"FTImagePickerViewController"];
         UINavigationController *navigationController = [storyBoard instantiateViewControllerWithIdentifier:@"FTImagePickerNavigationController"];
+        [FTImagePickerViewController setDelegate:(id)viewController];
+        albumListViewController.callerController = viewController;
         //Another setting for AlbumList and ImagePicker here!!
+        //setting For mutiple selection of image picker
+        FTImagePickerViewController.multipleSelectOn = NO;
+        albumListViewController.multipleSelectOn = FTImagePickerViewController.multipleSelectOn;
         
         //make a stack for showing appropriate ViewController for purpose of the app.
         //show album list first
-        //[navigationController setViewControllers:@[albumListViewController] animated:NO];
+        if(firstShowingController == FTAlbumList){
+            [navigationController setViewControllers:@[albumListViewController] animated:NO];
+        }
         //show image picker first
-        [navigationController setViewControllers:@[albumListViewController, imagePickerViewController] animated:NO];
+        else{
+        [navigationController setViewControllers:@[albumListViewController, FTImagePickerViewController] animated:NO];
+        }
         [viewController presentViewController:navigationController animated:YES completion:nil];
     }
     else{

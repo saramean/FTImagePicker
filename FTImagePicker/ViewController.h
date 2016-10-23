@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FTImagePicker.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <FTImagePickerViewControllerDelegate>
 
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (strong, nonatomic) NSMutableArray *selectedAssets;
 
 - (IBAction)OpenImagePicker:(UIControl *)sender;
 

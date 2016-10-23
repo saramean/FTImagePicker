@@ -20,15 +20,25 @@
     if(!self.allAssets){
         self.allAssets = [[NSMutableArray alloc] init];
     }
-    //set detail view size to screen size
+    if(!self.selectedItemsArray){
+        self.selectedItemsArray = [[NSMutableArray alloc] init];
+    }
+    //Configure FTDetailView
     [self.FTDetailView setAutoresizesSubviews:YES];
     [self.FTDetailView setFrame:[UIScreen mainScreen].bounds];
     [self.FTDetailView.detailCollectionView setFrame:self.FTDetailView.frame];
+    self.FTDetailView.multipleSelectOn = self.multipleSelectOn;
+    self.FTDetailView.detailCollectionView.allowsMultipleSelection = self.FTDetailView.multipleSelectOn;
+    self.FTDetailView.ImagePickerCollectionView = self.FTimagePickerCollectionView;
+    self.FTDetailView.selectBtn.hidden = !(self.FTDetailView.multipleSelectOn);
     
     //set cell scaleFactor and scale criteria
     self.scaleCriteria = 1.0;
-    self.cellScaleFactor = 4;
+    self.cellScaleFactor = 3;
     
+    //set multiple selection mode
+    self.FTimagePickerCollectionView.allowsMultipleSelection = self.multipleSelectOn;
+    self.selectBtn.hidden = !(self.multipleSelectOn);
     
     //fetch images when app start, doesn't fetch images when loaded from selected album
     if(self.allAssets.count == 0){
@@ -48,7 +58,11 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+- (BOOL)prefersStatusBarHidden{
+    return YES;
+}
 
+#pragma mark - Image Fetching
 - (void) fetchAllImageOrVideoFromDevice: (PHAssetMediaType) mediaType {
     PHFetchOptions *allPhotosOptions = [[PHFetchOptions alloc] init];
     allPhotosOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
@@ -59,6 +73,40 @@
     
 }
 
+#pragma mark - Collection View selection handling
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    //single selection mode
+    if(!self.multipleSelectOn){
+        PHAsset *selectedAsset = [self.allAssets objectAtIndex:indexPath.row];
+        [self.selectedItemsArray addObject:selectedAsset];
+        [self didFinishSelectPhotosFromImagePicker];
+    }
+    //multiple selection mode
+    else{
+        FTImagePickerCollectionViewCell *imagePickerCell = (FTImagePickerCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
+        imagePickerCell.layer.borderWidth = 2.0;
+        imagePickerCell.layer.borderColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
+        imagePickerCell.alpha = 0.5;
+        [self.FTDetailView.detailCollectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
+    //single selection mode
+    if(!self.multipleSelectOn){
+        
+    }
+    //multiple selection mode
+    else{
+        FTImagePickerCollectionViewCell *imagePickerCell = (FTImagePickerCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
+        imagePickerCell.layer.borderWidth = 0;
+        imagePickerCell.layer.borderColor = nil;
+        imagePickerCell.alpha = 1.0;
+        [self.FTDetailView.detailCollectionView deselectItemAtIndexPath:indexPath animated:NO];
+    }
+}
+
+#pragma mark - Configuring Collection View
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
 }
@@ -69,9 +117,20 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     FTImagePickerCollectionViewCell * cell = [self.FTimagePickerCollectionView dequeueReusableCellWithReuseIdentifier:@"imagePickerCells" forIndexPath:indexPath];
-    [[PHImageManager defaultManager] requestImageForAsset:self.allAssets[indexPath.row] targetSize:cell.bounds.size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+    [[PHImageManager defaultManager] requestImageForAsset:self.allAssets[indexPath.row] targetSize:CGSizeMake(cell.bounds.size.width*1.5, cell.bounds.size.height*1.5) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
         cell.thumbnailForCells.image = result;
     }];
+    //Because cell is reused when user scroll down or up collection view. it is needed to set cell's status by their selection property
+    if(cell.selected){
+        cell.layer.borderWidth = 2.0;
+        cell.layer.borderColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
+        cell.alpha = 0.5;
+    }
+    else{
+        cell.layer.borderWidth = 0;
+        cell.layer.borderColor = nil;
+        cell.alpha = 1;
+    }
     
     return cell;
 }
@@ -82,10 +141,14 @@
     float cellWidth = (screenWidth-(self.cellScaleFactor-1))/self.cellScaleFactor;
     return CGSizeMake(cellWidth, cellWidth);
 }
+#pragma mark - Back To application from picker
+- (void) didFinishSelectPhotosFromImagePicker{
+    [self.delegate getSelectedImageAssetsFromImagePicker:self.selectedItemsArray];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
 
 
-
-
+#pragma mark - Navigation Controll
 - (IBAction)backToAlbumLeftEdgePan:(UIScreenEdgePanGestureRecognizer *)sender {
     CGPoint translation = [sender translationInView:self.FTimagePickerCollectionView];
     NSLog(@"%f, %f", translation.x, translation.y);
@@ -101,8 +164,8 @@
      [self.navigationController popViewControllerAnimated:YES];
 }
 
+#pragma mark - See Detail Photo
 - (IBAction)showDetailCellLongPressed:(UILongPressGestureRecognizer *)sender {
-    NSLog(@"long");
     //get index path from long pressed point
     CGPoint location = [sender locationInView:self.FTimagePickerCollectionView];
     NSIndexPath *indexPath = [self.FTimagePickerCollectionView indexPathForItemAtPoint:location];
@@ -112,6 +175,8 @@
     [self.view addSubview:self.FTDetailView];
 }
 
+
+#pragma mark - Cell Zoom In and Out
 - (IBAction)cellZoomInOutPinch:(UIPinchGestureRecognizer *)sender {
     CGFloat scale = sender.scale;
     NSLog(@"scale %f", scale);
@@ -147,12 +212,14 @@
             if((scale - self.scaleCriteria) > 0 && self.cellScaleFactor > 2){
                 self.cellScaleFactor -= 1;
                 NSLog(@"scaleFactor %ld", (long)self.cellScaleFactor);
-                [self.FTimagePickerCollectionView reloadData];
+                [self.FTimagePickerCollectionView.collectionViewLayout invalidateLayout];
+                //[self.FTimagePickerCollectionView reloadData];
             }
             else if((scale - self.scaleCriteria) < 0 && self.cellScaleFactor < 6){
                 self.cellScaleFactor += 1;
                 NSLog(@"scaleFactor %ld", (long)self.cellScaleFactor);
-                [self.FTimagePickerCollectionView reloadData];
+                [self.FTimagePickerCollectionView.collectionViewLayout invalidateLayout];
+                //[self.FTimagePickerCollectionView reloadData];
             }
             self.scaleCriteria = scale;
         }
@@ -162,5 +229,9 @@
         self.scaleCriteria = 1.0;
     }
     
+}
+
+
+- (IBAction)cancelImagePickerBtnClicked:(UIButton *)sender {
 }
 @end

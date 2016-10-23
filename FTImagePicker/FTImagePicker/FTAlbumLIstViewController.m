@@ -20,25 +20,27 @@
     if(!self.albumsArray){
         self.albumsArray = [[NSMutableArray alloc] init];
     }
+    //Fetching cameraRoll
     PHFetchResult *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
     [cameraRoll enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [self.albumsArray addObject:obj];
     }];
     
     //Fetching user albums
-    PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
-    albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"estimatedAssetCount > 0"];
-    PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:albumsFetchingOptions];
+    PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
     [userAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         PHAssetCollection *collection = obj;
-        NSLog(@"album title %@", collection.localizedTitle);
+        PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
+        //add albums which have at least one item in their album.
+        if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+            [self.albumsArray addObject:obj];
+        }
         [self.albumsArray addObject:obj];
     }];
     //Fetching smart albums
     PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
     [smartAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         PHAssetCollection *collection = obj;
-        NSLog(@"album title %@", collection.localizedTitle);
         PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
         //add albums which have at least one item in their album.
         if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
@@ -53,6 +55,7 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - CollectionView Configuration
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
 }
@@ -61,12 +64,24 @@
     return self.albumsArray.count;
 }
 
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
+    CGSize mainScreenSize = [UIScreen mainScreen].bounds.size;
+    float cellWidth = (mainScreenSize.width-1)/2;
+    NSLog(@"%f", cellWidth);
+    return CGSizeMake(cellWidth, cellWidth*17/15);
+}
+
+#pragma mark - CollectionView cell configuration
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     FTAlbumListCollectionViewCell *cell = [self.albumlistCollectionView dequeueReusableCellWithReuseIdentifier:@"albumListCells" forIndexPath:indexPath];
+    //get album title from phassetcollection
     PHAssetCollection *collection = self.albumsArray[indexPath.row];
     cell.albumTitle.text = collection.localizedTitle;
     cell.albumCollection = collection;
-    PHFetchResult *assetResultForAlbumCover = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
+    //get phasset for album cover image
+    PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
+    albumsFetchingOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+    PHFetchResult *assetResultForAlbumCover = [PHAsset fetchAssetsInAssetCollection:collection options:albumsFetchingOptions];
     int albumCoverNumber = (int)assetResultForAlbumCover.count;
     if(albumCoverNumber > 3){
         albumCoverNumber = 3;
@@ -78,6 +93,7 @@
             [assetForAlbumCover addObject:obj];
         }];
     }
+    //set album cover image
     for (int i = 0; i < albumCoverNumber ; i ++){
         [[PHImageManager defaultManager] requestImageForAsset:assetForAlbumCover[i] targetSize:cell.imageView1.bounds.size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
             UIImageView * imageView = arrayForCellImages[i];
@@ -90,18 +106,19 @@
     return cell;
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    CGSize mainScreenSize = [UIScreen mainScreen].bounds.size;
-    float cellWidth = (mainScreenSize.width-1)/2;
-    NSLog(@"%f", cellWidth);
-    return CGSizeMake(cellWidth, cellWidth*17/15);
-}
-
+#pragma Segue configuration(Load image picker)
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if([segue.identifier isEqualToString:@"albumListToImagePicker"]){
         FTImagePickerViewController *imagePickerViewController = segue.destinationViewController;
+        //configure multiple selection setting
+        imagePickerViewController.multipleSelectOn = self.multipleSelectOn;
+        //set delegate
+        imagePickerViewController.delegate = (id)self.callerController;
+        //get images from album
         FTAlbumListCollectionViewCell *cell = sender;
-        PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetsInAssetCollection:cell.albumCollection options:nil];
+        PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
+        albumsFetchingOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+        PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetsInAssetCollection:cell.albumCollection options:albumsFetchingOptions];
         NSMutableArray *assetForAlbum = [[NSMutableArray alloc] init];
         [assetResultForAlbum enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [assetForAlbum addObject:obj];

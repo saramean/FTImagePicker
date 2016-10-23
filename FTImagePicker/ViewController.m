@@ -7,7 +7,7 @@
 //
 
 #import "ViewController.h"
-#import "FTImagePicker.h"
+
 
 @interface ViewController ()
 
@@ -18,6 +18,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    if(!self.selectedAssets){
+        self.selectedAssets = [[NSMutableArray alloc] init];
+    }
 }
 
 
@@ -29,5 +32,14 @@
 
 - (IBAction)OpenImagePicker:(UIControl *)sender {
     [FTImagePickerManager presentFTImagePicker:self firstShowingController:FTImagePicker];
+}
+
+- (void)getSelectedImageAssetsFromImagePicker:(NSMutableArray *)selectedAssetsArray{
+    NSLog(@"asdfa");
+    self.selectedAssets = selectedAssetsArray;
+    PHAsset *asset = [self.selectedAssets firstObject];
+    [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:self.imageView.bounds.size contentMode:PHImageContentModeAspectFit options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        self.imageView.image = result;
+    }];
 }
 @end

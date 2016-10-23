@@ -53,15 +53,15 @@
                                             <rect key="frame" x="0.0" y="0.0" width="160" height="175"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Udp-dZ-qaK">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Udp-dZ-qaK">
                                                     <frame key="frameInset" minX="13.75%" minY="5.14%" width="72.50%" height="66.29%"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wnK-C5-6w4">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wnK-C5-6w4">
                                                     <frame key="frameInset" minX="12.50%" minY="8.00%" width="75.63%" height="69.14%"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PDh-sg-pi3">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PDh-sg-pi3">
                                                     <frame key="frameInset" minX="10.63%" minY="10.86%" width="79.38%" height="72.57%"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                                 </imageView>
@@ -166,6 +166,14 @@
                                             <action selector="backToAlbumBtnClicked:" destination="kqN-Lu-1hX" eventType="touchUpInside" id="wpv-RP-zqo"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sA0-2x-2dA">
+                                        <frame key="frameInset" minX="49.85%" minY="48.15%" width="48" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Cancel"/>
+                                        <connections>
+                                            <action selector="cancelImagePickerBtnClicked:" destination="kqN-Lu-1hX" eventType="touchUpInside" id="HI9-oB-qZf"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </view>
@@ -176,6 +184,7 @@
                     <connections>
                         <outlet property="FTDetailView" destination="bkV-ob-btx" id="9Di-31-jI3"/>
                         <outlet property="FTimagePickerCollectionView" destination="gC1-7B-3cg" id="xcU-hM-vgM"/>
+                        <outlet property="selectBtn" destination="wL4-mF-YhO" id="nKN-yq-0r0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Vf-Kj-VLR" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -230,11 +239,19 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L37-a2-goy">
-                                    <frame key="frameInset" height="59"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                    <frame key="frameInset" minY="0.0%" width="15.20%" height="59"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                     <state key="normal" title="Back"/>
                                     <connections>
                                         <action selector="dismissViewBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="Ebl-Ip-VOm"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tqw-gY-QKe">
+                                    <frame key="frameInset" minY="0.0%" width="17.60%" height="59"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Select"/>
+                                    <connections>
+                                        <action selector="selectBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="Lbm-fr-AQz"/>
                                     </connections>
                                 </button>
                             </subviews>
@@ -244,6 +261,7 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
                         <outlet property="detailCollectionView" destination="io9-gH-8aC" id="BRE-AP-7EG"/>
+                        <outlet property="selectBtn" destination="Tqw-gY-QKe" id="8Mi-cY-LHF"/>
                     </connections>
                 </view>
                 <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="4Zq-Wf-JkX">
