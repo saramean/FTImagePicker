@@ -17,7 +17,7 @@
 @end
 
 
-@interface FTImagePickerViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface FTImagePickerViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FTDetailViewDelegate>
 @property (strong, nonatomic) NSMutableArray *allAssets;
 @property (weak, nonatomic) IBOutlet UICollectionView *FTimagePickerCollectionView;
 @property (strong, nonatomic) IBOutlet FTDetailView *FTDetailView;

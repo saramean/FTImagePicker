@@ -9,12 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "FTImagePickerCells.h"
 
+@protocol FTDetailViewDelegate <NSObject>
+
+- (void) singleSelectionModeSelectionConfirmed: (NSMutableArray *) selectedAssetArray;
+
+@end
+
+
 @interface FTDetailView : UIView <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate, UIGestureRecognizerDelegate>
 @property (strong, nonatomic) NSMutableArray *allAssets;
 @property (nonatomic) BOOL multipleSelectOn;
 @property (strong, nonatomic) UICollectionView *ImagePickerCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *detailCollectionView;
 @property (weak, nonatomic) IBOutlet UIButton *selectBtn;
+@property (weak, nonatomic) id<FTDetailViewDelegate> delegate;
 
 - (IBAction)dismissViewDownPan:(UIPanGestureRecognizer *)sender;
 - (IBAction)dismissViewBtnClicked:(UIButton *)sender;

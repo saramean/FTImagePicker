@@ -44,7 +44,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     FTDetailViewCollectionViewCell *cell = [self.detailCollectionView dequeueReusableCellWithReuseIdentifier:@"detailViewCells" forIndexPath:indexPath];
     
-    [[PHImageManager defaultManager] requestImageForAsset:self.allAssets[indexPath.row] targetSize:cell.bounds.size contentMode:PHImageContentModeAspectFit options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+    [[PHImageManager defaultManager] requestImageForAsset:self.allAssets[indexPath.row] targetSize:CGSizeMake(cell.bounds.size.width*3, cell.bounds.size.height*2)  contentMode:PHImageContentModeAspectFit options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
         //set image
         [cell.detailImageView setFrame:self.frame];
         cell.detailImageView.image = result;
@@ -140,8 +140,19 @@
     [self removeFromSuperview];
 }
 
+#pragma mark - select button clicked
 - (IBAction)selectBtnClicked:(UIButton *)sender {
-    if(self.multipleSelectOn){
+    //single selection mode
+    if(!self.multipleSelectOn){
+        NSMutableArray *selectedItem;
+        if(!selectedItem){
+            selectedItem = [[NSMutableArray alloc] init];
+        }
+        [selectedItem addObject:[self.allAssets objectAtIndex:[[self.detailCollectionView indexPathsForVisibleItems] firstObject].row]];
+        [self.delegate singleSelectionModeSelectionConfirmed:selectedItem];
+    }
+    //multiple select action
+    else{
         NSArray *itemToBeSelectedOrDeselected = [NSArray arrayWithArray:[self.detailCollectionView indexPathsForVisibleItems]];
         FTDetailViewCollectionViewCell *detailViewCell =(FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:itemToBeSelectedOrDeselected[0]];
         if([sender.currentTitle isEqualToString:@"Select"]){
