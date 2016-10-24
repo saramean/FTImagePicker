@@ -235,34 +235,34 @@
         //scroll to show selected image
         [self.FTDetailView.detailCollectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
         //show sub view
-//        //selected cell in image picker
-//        FTImagePickerCollectionViewCell *selectedCell = (FTImagePickerCollectionViewCell *)[self.FTimagePickerCollectionView cellForItemAtIndexPath:indexPath];
-//        //get frame from selected cell and convert it according to collection's superview to get correct cgrect value according to main screen
-//        CGRect convertedRect = [self.FTimagePickerCollectionView convertRect:selectedCell.frame toView:[self.FTimagePickerCollectionView superview]];
-//        //make a image view for transition effect
-//        UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:convertedRect];
-//        imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
-//        imageViewForTransition.clipsToBounds = YES;
-//        [[PHImageManager defaultManager] requestImageForAsset:self.allAssets[indexPath.row] targetSize:self.FTDetailView.frame.size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-//            imageViewForTransition.image = result;
-//        }];
-//        //make a another image view for hiding cell image
-//        UIView *hidingImageView = [[UIView alloc] initWithFrame:self.FTDetailView.detailCollectionView.bounds];
-//        hidingImageView.backgroundColor = self.FTDetailView.detailCollectionView.backgroundColor;
+        //selected cell in image picker
+        FTImagePickerCollectionViewCell *selectedCell = (FTImagePickerCollectionViewCell *)[self.FTimagePickerCollectionView cellForItemAtIndexPath:indexPath];
+        //get frame from selected cell and convert it according to collection's superview to get correct cgrect value according to main screen
+        CGRect convertedRect = [self.FTimagePickerCollectionView convertRect:selectedCell.frame toView:[self.FTimagePickerCollectionView superview]];
+        //make a image view for transition effect
+        UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:convertedRect];
+        imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
+        imageViewForTransition.clipsToBounds = YES;
+        [[PHImageManager defaultManager] requestImageForAsset:self.allAssets[indexPath.row] targetSize:self.FTDetailView.frame.size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+            imageViewForTransition.image = result;
+        }];
+        //make a another image view for hiding cell image
+        UIView *hidingImageView = [[UIView alloc] initWithFrame:self.FTDetailView.detailCollectionView.bounds];
+        hidingImageView.backgroundColor = self.FTDetailView.detailCollectionView.backgroundColor;
         //add subviews
         [self.view addSubview:self.FTDetailView];
-//        [self.FTDetailView.detailCollectionView addSubview:hidingImageView];
-//        [self.view addSubview:imageViewForTransition];
-//        //animation effect configuration
-//        [self.FTDetailView setAlpha:0.0];
-//        [UIView animateWithDuration:0.2 animations:^{
-//            [self.FTDetailView setAlpha:1];
-//            [imageViewForTransition setFrame:CGRectInset(self.FTDetailView.frame, -0.015*CGRectGetWidth(self.FTDetailView.frame), -0.015*CGRectGetHeight(self.FTDetailView.frame)) ];
-//            imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
-//        } completion:^(BOOL finished) {
-//            [imageViewForTransition removeFromSuperview];
-//            [hidingImageView removeFromSuperview];
-//        }];
+        [self.FTDetailView.detailCollectionView addSubview:hidingImageView];
+        [self.view addSubview:imageViewForTransition];
+        //animation effect configuration
+        [self.FTDetailView setAlpha:0.0];
+        [UIView animateWithDuration:0.2 animations:^{
+            [self.FTDetailView setAlpha:1];
+            [imageViewForTransition setFrame:CGRectInset(self.FTDetailView.frame, -0.015*CGRectGetWidth(self.FTDetailView.frame), -0.015*CGRectGetHeight(self.FTDetailView.frame)) ];
+            imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
+        } completion:^(BOOL finished) {
+            [imageViewForTransition removeFromSuperview];
+            [hidingImageView removeFromSuperview];
+        }];
     }
 }
 
