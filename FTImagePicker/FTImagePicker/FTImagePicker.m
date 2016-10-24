@@ -23,13 +23,19 @@
         UINavigationController *navigationController = [storyBoard instantiateViewControllerWithIdentifier:@"FTImagePickerNavigationController"];
         [FTImagePickerViewController setDelegate:(id)viewController];
         albumListViewController.callerController = viewController;
-        FTImagePickerViewController.albumName =@"default";
+        PHFetchResult *fetchingAlbumTitle = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+        [fetchingAlbumTitle enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            PHAssetCollection *collection = obj;
+            FTImagePickerViewController.albumName =collection.localizedTitle;
+        }];
         
         //Another setting for AlbumList and ImagePicker here!!
         //setting For mutiple selection of image picker
 #pragma mark - Multiple Selection Option
         FTImagePickerViewController.multipleSelectOn = YES;
+        FTImagePickerViewController.multipleSecletMax = 9;
         albumListViewController.multipleSelectOn = FTImagePickerViewController.multipleSelectOn;
+        albumListViewController.multipleSelectMax = FTImagePickerViewController.multipleSecletMax;
         
 #pragma mark - Album Selection Option
         //Setting which albums will be used in the app
@@ -62,6 +68,12 @@
         //Add or Delete albums you want
         albumListViewController.regularAlbums = @[@2, @3, @4, @5, @6, @100];
         albumListViewController.smartAlbums = @[@200, @201, @202, @203, @204, @205, @206, @207, @208, @210, @211];
+#pragma mark - Media Type Option
+//            ImagesOnly = 1,
+//            VideosOnly = 2,
+//            ImagesAndVideos = 3,
+        albumListViewController.mediaTypeToUse = ImagesOnly;
+        FTImagePickerViewController.mediaTypeToUse = albumListViewController.mediaTypeToUse;
         
         
         //make a stack for showing appropriate ViewController for purpose of the app.

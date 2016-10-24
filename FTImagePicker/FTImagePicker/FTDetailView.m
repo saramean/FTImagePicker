@@ -77,18 +77,46 @@
     return nil;
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+//Check focused item is selected item or not
+- (void) scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
+    NSLog(@"scroll view content offset x: %f, y: %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
+    NSLog(@"scoll view targetConetnOffset x: %f, y: %f", targetContentOffset->x, targetContentOffset->y);
     NSArray *visibleItem = [NSArray arrayWithArray:[self.detailCollectionView indexPathsForVisibleItems]];
-    FTDetailViewCollectionViewCell *detailViewCell =(FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:[visibleItem lastObject]];
-    NSLog(@"%d", detailViewCell.selected);
+    FTDetailViewCollectionViewCell *detailViewCell;
+    //scroll view is heading +x direction
+    if(targetContentOffset->x > scrollView.contentOffset.x){
+        NSIndexPath *firstObjectIndexPath = [visibleItem firstObject];
+        NSIndexPath *lastObjectIndexPath = [visibleItem lastObject];
+        NSIndexPath *indexPathForCell;
+        if(firstObjectIndexPath.row > lastObjectIndexPath.row){
+            indexPathForCell = firstObjectIndexPath;
+        }
+        else{
+            indexPathForCell = lastObjectIndexPath;
+        }
+        detailViewCell =(FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:indexPathForCell];
+    }
+    //scroll view is heading -x direction
+    else{
+        NSIndexPath *firstObjectIndexPath = [visibleItem firstObject];
+        NSIndexPath *lastObjectIndexPath = [visibleItem lastObject];
+        NSIndexPath *indexPathForCell;
+        if(firstObjectIndexPath.row < lastObjectIndexPath.row){
+            indexPathForCell = firstObjectIndexPath;
+        }
+        else{
+            indexPathForCell = lastObjectIndexPath;
+        }
+        detailViewCell =(FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:indexPathForCell];
+    }
     if(detailViewCell.selected){
         [self.selectBtn setTitle:@"Deselect" forState:UIControlStateNormal];
     }
     else{
         [self.selectBtn setTitle:@"Select" forState:UIControlStateNormal];
     }
-}
 
+}
 
 #pragma mark - Collection View Configuring
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -210,8 +238,10 @@
         [self removeFromSuperview];
         //show cell in image picker after transition
         [selectedCellInImagePicker.contentView setAlpha:1.0];
+        
     }];
 }
+
 
 #pragma mark - select button clicked
 - (IBAction)selectBtnClicked:(UIButton *)sender {

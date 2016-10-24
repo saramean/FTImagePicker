@@ -20,6 +20,12 @@ typedef NS_ENUM(NSInteger, FTFirstShowingController) {
     FTImagePicker = 2,
 };
 
+typedef NS_ENUM(NSInteger, MediaTypeToUse) {
+    ImagesOnly = 1,
+    VideosOnly = 2,
+    ImagesAndVideos = 3,
+};
+
 @interface FTImagePickerManager : NSObject
 
 + (void) presentFTImagePicker: (UIViewController *) viewController firstShowingController:(FTFirstShowingController) firstShowingController;

@@ -24,6 +24,9 @@
 @property (nonatomic) CGFloat scaleCriteria;
 @property (nonatomic) NSInteger cellScaleFactor;
 @property (nonatomic) BOOL multipleSelectOn;
+@property (nonatomic) NSInteger multipleSecletMax;
+@property (nonatomic) NSInteger mediaTypeToUse;
+@property (nonatomic) NSString *cameraRollLocalTitle;
 @property (strong, nonatomic) NSMutableArray *selectedItemsArray;
 @property (weak, nonatomic) IBOutlet UIButton *selectBtn;
 @property (weak, nonatomic) id<FTImagePickerViewControllerDelegate> delegate;

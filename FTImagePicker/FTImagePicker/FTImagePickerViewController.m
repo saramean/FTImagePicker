@@ -28,6 +28,7 @@
     [self.FTDetailView setFrame:[UIScreen mainScreen].bounds];
     [self.FTDetailView.detailCollectionView setFrame:self.FTDetailView.frame];
     self.FTDetailView.multipleSelectOn = self.multipleSelectOn;
+    self.FTDetailView.multipleSelectMax = self.multipleSecletMax;
     self.FTDetailView.detailCollectionView.allowsMultipleSelection = self.FTDetailView.multipleSelectOn;
     self.FTDetailView.ImagePickerCollectionView = self.FTimagePickerCollectionView;
     self.FTDetailView.delegate = self;
@@ -44,25 +45,25 @@
     if(self.allAssets.count == 0){
         //fetch all images from device
         if([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized){
-            //fetch images
-            [self fetchAllImageOrVideoFromDevice: PHAssetMediaTypeImage];
-            //fetch videos
-            [self fetchAllImageOrVideoFromDevice:PHAssetMediaTypeVideo];
+            [self fetchAllImageOrVideoFromDevice];
         }
     }
     //pass assets to detail view
     self.FTDetailView.allAssets = self.allAssets;
+    //get camera rolls local title
+    PHFetchResult *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+    [cameraRoll enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        PHAssetCollection *collection = obj;
+        self.cameraRollLocalTitle = collection.localizedTitle;
+    }];
     //Notification center observer
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshImagePicker) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 - (void) refreshImagePicker{
-    NSLog(@"fore");
     [self.allAssets removeAllObjects];
-    if([self.albumName isEqualToString:@"default"]){
+    if([self.albumName isEqualToString:self.cameraRollLocalTitle]){
         //fetch images
-        [self fetchAllImageOrVideoFromDevice: PHAssetMediaTypeImage];
-        //fetch videos
-        [self fetchAllImageOrVideoFromDevice:PHAssetMediaTypeVideo];
+        [self fetchAllImageOrVideoFromDevice];
     }
     else{
         [self fetchImagesOrVideosFromAlbum];
@@ -81,26 +82,47 @@
 }
 
 #pragma mark - Image Fetching
-- (void) fetchAllImageOrVideoFromDevice: (PHAssetMediaType) mediaType {
-    PHFetchOptions *allPhotosOptions = [[PHFetchOptions alloc] init];
-    allPhotosOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
-    PHFetchResult *allPhotosResult = [PHAsset fetchAssetsWithMediaType:mediaType options:allPhotosOptions];
-    [allPhotosResult enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [self.allAssets addObject:obj];
+- (void) fetchAllImageOrVideoFromDevice {
+    NSDate *methodStart = [NSDate date];
+    PHFetchResult *cameraRollAlbum = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+    [cameraRollAlbum enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        PHAssetCollection *collection = obj;
+        PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
+        albumsFetchingOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+        if(self.mediaTypeToUse != 3){
+            albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType = %d", self.mediaTypeToUse];
+        }
+        else{
+            albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType != %d", self.mediaTypeToUse];
+        }
+        PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetsInAssetCollection:collection options:albumsFetchingOptions];
+        [assetResultForAlbum enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [self.allAssets addObject:obj];
+        }];
     }];
+    NSDate *methodFinish = [NSDate date];
+    NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
+    NSLog(@"refresh camera roll excutionTime = %f", executionTime);
 }
 
 - (void) fetchImagesOrVideosFromAlbum {
+    NSDate *methodStart = [NSDate date];
     //Fetching user albums
     PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
     [userAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         PHAssetCollection *collection = obj;
         PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
         //add albums which have at least one item in their album.
-        if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
-                if([self.albumName isEqualToString:collection.localizedTitle]){
+        if(fetchingResultForCount.count > 0){
+            if([self.albumName isEqualToString:collection.localizedTitle]){
                 PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
                 albumsFetchingOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+                if(self.mediaTypeToUse != 3){
+                    albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType = %d", self.mediaTypeToUse];
+                }
+                else{
+                    albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType != %d", self.mediaTypeToUse];
+                }
                 PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetsInAssetCollection:collection options:albumsFetchingOptions];
                 [assetResultForAlbum enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     [self.allAssets addObject:obj];
@@ -118,6 +140,12 @@
             if([self.albumName isEqualToString:collection.localizedTitle]){
                 PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
                 albumsFetchingOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+                if(self.mediaTypeToUse != 3){
+                    albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType = %d", self.mediaTypeToUse];
+                }
+                else{
+                    albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType != %d", self.mediaTypeToUse];
+                }
                 PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetsInAssetCollection:collection options:albumsFetchingOptions];
                 [assetResultForAlbum enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                     [self.allAssets addObject:obj];
@@ -125,7 +153,9 @@
             }
         }
     }];
-
+    NSDate *methodFinish = [NSDate date];
+    NSTimeInterval executionTime = [methodFinish timeIntervalSinceDate:methodStart];
+    NSLog(@"refresh album excutionTime = %f", executionTime);
 }
 
 #pragma mark - Collection View selection handling
@@ -237,6 +267,13 @@
         //show sub view
         //selected cell in image picker
         FTImagePickerCollectionViewCell *selectedCell = (FTImagePickerCollectionViewCell *)[self.FTimagePickerCollectionView cellForItemAtIndexPath:indexPath];
+        //set select button status in detail view
+        if(selectedCell.selected){
+            [self.FTDetailView.selectBtn setTitle:@"Deselect" forState:UIControlStateNormal];
+        }
+        else{
+            [self.FTDetailView.selectBtn setTitle:@"Select" forState:UIControlStateNormal];
+        }
         //get frame from selected cell and convert it according to collection's superview to get correct cgrect value according to main screen
         CGRect convertedRect = [self.FTimagePickerCollectionView convertRect:selectedCell.frame toView:[self.FTimagePickerCollectionView superview]];
         //make a image view for transition effect
@@ -291,7 +328,8 @@
                 else if((scale - self.scaleCriteria) < 0 && self.cellScaleFactor < 6){
                     self.cellScaleFactor += 1;
                     NSLog(@"scaleFactor %ld", (long)self.cellScaleFactor);
-                    [self.FTimagePickerCollectionView reloadData];
+                    [self.FTimagePickerCollectionView.collectionViewLayout invalidateLayout];
+                    //[self.FTimagePickerCollectionView reloadData];
                 }
                 self.scaleCriteria = scale;
             }
