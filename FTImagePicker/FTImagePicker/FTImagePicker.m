@@ -24,10 +24,45 @@
         [FTImagePickerViewController setDelegate:(id)viewController];
         albumListViewController.callerController = viewController;
         FTImagePickerViewController.albumName =@"default";
+        
         //Another setting for AlbumList and ImagePicker here!!
         //setting For mutiple selection of image picker
-        FTImagePickerViewController.multipleSelectOn = NO;
+#pragma mark - Multiple Selection Option
+        FTImagePickerViewController.multipleSelectOn = YES;
         albumListViewController.multipleSelectOn = FTImagePickerViewController.multipleSelectOn;
+        
+#pragma mark - Album Selection Option
+        //Setting which albums will be used in the app
+//        // PHAssetCollectionTypeAlbum regular subtypes
+//        PHAssetCollectionSubtypeAlbumRegular         = 2,
+//        PHAssetCollectionSubtypeAlbumSyncedEvent     = 3,
+//        PHAssetCollectionSubtypeAlbumSyncedFaces     = 4,
+//        PHAssetCollectionSubtypeAlbumSyncedAlbum     = 5,
+//        PHAssetCollectionSubtypeAlbumImported        = 6,
+//        
+//        // PHAssetCollectionTypeAlbum shared subtypes
+//        PHAssetCollectionSubtypeAlbumMyPhotoStream   = 100,
+//        PHAssetCollectionSubtypeAlbumCloudShared     = 101,  ICloud Shared
+//        
+//        // PHAssetCollectionTypeSmartAlbum subtypes
+//        PHAssetCollectionSubtypeSmartAlbumGeneric    = 200,
+//        PHAssetCollectionSubtypeSmartAlbumPanoramas  = 201,     Panoramas
+//        PHAssetCollectionSubtypeSmartAlbumVideos     = 202,     Videos
+//        PHAssetCollectionSubtypeSmartAlbumFavorites  = 203,     Favorites
+//        PHAssetCollectionSubtypeSmartAlbumTimelapses = 204,     Time-lapse
+//        PHAssetCollectionSubtypeSmartAlbumAllHidden  = 205,
+//        PHAssetCollectionSubtypeSmartAlbumRecentlyAdded = 206,  RecentlyAdded
+//        PHAssetCollectionSubtypeSmartAlbumBursts     = 207,
+//        PHAssetCollectionSubtypeSmartAlbumSlomoVideos = 208,    Slo-mo
+//        PHAssetCollectionSubtypeSmartAlbumUserLibrary = 209,    Camer Roll
+//        PHAssetCollectionSubtypeSmartAlbumSelfPortraits PHOTOS_AVAILABLE_IOS_TVOS(9_0, 10_0) = 210,  Selfie
+//        PHAssetCollectionSubtypeSmartAlbumScreenshots PHOTOS_AVAILABLE_IOS_TVOS(9_0, 10_0) = 211,    Screenshots
+        
+        //Camera Roll is added as a default album
+        //Add or Delete albums you want
+        albumListViewController.regularAlbums = @[@2, @3, @4, @5, @6, @100];
+        albumListViewController.smartAlbums = @[@200, @201, @202, @203, @204, @205, @206, @207, @208, @210, @211];
+        
         
         //make a stack for showing appropriate ViewController for purpose of the app.
         //show album list first
@@ -41,7 +76,7 @@
         [viewController presentViewController:navigationController animated:YES completion:nil];
     }
     else{
-        [FTImagePickerManager managePhotoLibrarySetting:viewController firstShowingController:firstShowingController];
+        [self managePhotoLibrarySetting:viewController firstShowingController:firstShowingController];
     }
 }
 
@@ -55,7 +90,9 @@
     if(status == PHAuthorizationStatusNotDetermined){
         [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
             if(status == PHAuthorizationStatusAuthorized){
-                [FTImagePickerManager presentFTImagePicker:viewController firstShowingController:firstShowingController];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self presentFTImagePicker:viewController firstShowingController:firstShowingController];
+                });
             }
             else{
                 NSString *title = @"Cannot access PhotoLibrary";

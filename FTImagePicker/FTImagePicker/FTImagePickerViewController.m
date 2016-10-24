@@ -200,7 +200,7 @@
 //set cell size delegate
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     float screenWidth = [UIScreen mainScreen].bounds.size.width;
-    float cellWidth = (screenWidth-(self.cellScaleFactor-1))/self.cellScaleFactor;
+    float cellWidth = floor((screenWidth-(self.cellScaleFactor-1))/self.cellScaleFactor);
     return CGSizeMake(cellWidth, cellWidth);
 }
 #pragma mark - Back To application from picker

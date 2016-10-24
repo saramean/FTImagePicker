@@ -32,31 +32,34 @@
         NSLog(@"%@",collection.localizedTitle);
         [self.albumsArray addObject:obj];
     }];
-    
-    //Fetching user albums
-    PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
-    [userAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        PHAssetCollection *collection = obj;
-        PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
-        //add albums which have at least one item in their album.
-        if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+    for(NSNumber *album in self.regularAlbums){
+        //Fetching user albums
+        PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:[album integerValue] options:nil];
+        [userAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             PHAssetCollection *collection = obj;
-            NSLog(@"%@",collection.localizedTitle);
-            [self.albumsArray addObject:obj];
-        }
-    }];
-    //Fetching smart albums
-    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
-    [smartAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        PHAssetCollection *collection = obj;
-        PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
-        //add albums which have at least one item in their album.
-        if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+            PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
+            //add albums which have at least one item in their album.
+            if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+                PHAssetCollection *collection = obj;
+                NSLog(@"%@",collection.localizedTitle);
+                [self.albumsArray addObject:obj];
+            }
+        }];
+    }
+    for(NSNumber *album in self.smartAlbums){
+        //Fetching smart albums
+        PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:[album integerValue] options:nil];
+        [smartAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             PHAssetCollection *collection = obj;
-            NSLog(@"%@",collection.localizedTitle);
-            [self.albumsArray addObject:obj];
-        }
-    }];
+            PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
+            //add albums which have at least one item in their album.
+            if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+                PHAssetCollection *collection = obj;
+                NSLog(@"%@",collection.localizedTitle);
+                [self.albumsArray addObject:obj];
+            }
+        }];
+    }
 }
 
 - (void) refreshAlbum{
