@@ -27,6 +27,7 @@
 @property (strong, nonatomic) NSMutableArray *selectedItemsArray;
 @property (weak, nonatomic) IBOutlet UIButton *selectBtn;
 @property (weak, nonatomic) id<FTImagePickerViewControllerDelegate> delegate;
+@property (strong, nonatomic) NSString *albumName;
 
 
 - (IBAction)backToAlbumLeftEdgePan:(UIScreenEdgePanGestureRecognizer *)sender;

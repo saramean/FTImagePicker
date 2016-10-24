@@ -52,6 +52,24 @@
     }
     //pass assets to detail view
     self.FTDetailView.allAssets = self.allAssets;
+    //Notification center observer
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshImagePicker) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+- (void) refreshImagePicker{
+    NSLog(@"fore");
+    [self.allAssets removeAllObjects];
+    if([self.albumName isEqualToString:@"default"]){
+        //fetch images
+        [self fetchAllImageOrVideoFromDevice: PHAssetMediaTypeImage];
+        //fetch videos
+        [self fetchAllImageOrVideoFromDevice:PHAssetMediaTypeVideo];
+    }
+    else{
+        [self fetchImagesOrVideosFromAlbum];
+    }
+    //pass assets to detail view
+    self.FTDetailView.allAssets = self.allAssets;
+    [self.FTimagePickerCollectionView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -70,7 +88,44 @@
     [allPhotosResult enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [self.allAssets addObject:obj];
     }];
-    
+}
+
+- (void) fetchImagesOrVideosFromAlbum {
+    //Fetching user albums
+    PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
+    [userAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        PHAssetCollection *collection = obj;
+        PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
+        //add albums which have at least one item in their album.
+        if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+                if([self.albumName isEqualToString:collection.localizedTitle]){
+                PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
+                albumsFetchingOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+                PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetsInAssetCollection:collection options:albumsFetchingOptions];
+                [assetResultForAlbum enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [self.allAssets addObject:obj];
+                }];
+            }
+        }
+    }];
+    //Fetching smart albums
+    PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
+    [smartAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        PHAssetCollection *collection = obj;
+        PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
+        //add albums which have at least one item in their album.
+        if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+            if([self.albumName isEqualToString:collection.localizedTitle]){
+                PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
+                albumsFetchingOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
+                PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetsInAssetCollection:collection options:albumsFetchingOptions];
+                [assetResultForAlbum enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    [self.allAssets addObject:obj];
+                }];
+            }
+        }
+    }];
+
 }
 
 #pragma mark - Collection View selection handling
@@ -180,34 +235,34 @@
         //scroll to show selected image
         [self.FTDetailView.detailCollectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
         //show sub view
-        //selected cell in image picker
-        FTImagePickerCollectionViewCell *selectedCell = (FTImagePickerCollectionViewCell *)[self.FTimagePickerCollectionView cellForItemAtIndexPath:indexPath];
-        //get frame from selected cell and convert it according to collection's superview to get correct cgrect value according to main screen
-        CGRect convertedRect = [self.FTimagePickerCollectionView convertRect:selectedCell.frame toView:[self.FTimagePickerCollectionView superview]];
-        //make a image view for transition effect
-        UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:convertedRect];
-        imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
-        imageViewForTransition.clipsToBounds = YES;
-        [[PHImageManager defaultManager] requestImageForAsset:self.allAssets[indexPath.row] targetSize:self.FTDetailView.frame.size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-            imageViewForTransition.image = result;
-        }];
-        //make a another image view for hiding cell image
-        UIView *hidingImageView = [[UIView alloc] initWithFrame:self.FTDetailView.detailCollectionView.bounds];
-        hidingImageView.backgroundColor = self.FTDetailView.detailCollectionView.backgroundColor;
+//        //selected cell in image picker
+//        FTImagePickerCollectionViewCell *selectedCell = (FTImagePickerCollectionViewCell *)[self.FTimagePickerCollectionView cellForItemAtIndexPath:indexPath];
+//        //get frame from selected cell and convert it according to collection's superview to get correct cgrect value according to main screen
+//        CGRect convertedRect = [self.FTimagePickerCollectionView convertRect:selectedCell.frame toView:[self.FTimagePickerCollectionView superview]];
+//        //make a image view for transition effect
+//        UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:convertedRect];
+//        imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
+//        imageViewForTransition.clipsToBounds = YES;
+//        [[PHImageManager defaultManager] requestImageForAsset:self.allAssets[indexPath.row] targetSize:self.FTDetailView.frame.size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+//            imageViewForTransition.image = result;
+//        }];
+//        //make a another image view for hiding cell image
+//        UIView *hidingImageView = [[UIView alloc] initWithFrame:self.FTDetailView.detailCollectionView.bounds];
+//        hidingImageView.backgroundColor = self.FTDetailView.detailCollectionView.backgroundColor;
         //add subviews
         [self.view addSubview:self.FTDetailView];
-        [self.FTDetailView.detailCollectionView addSubview:hidingImageView];
-        [self.view addSubview:imageViewForTransition];
-        //animation effect configuration
-        [self.FTDetailView setAlpha:0.0];
-        [UIView animateWithDuration:0.2 animations:^{
-            [self.FTDetailView setAlpha:1];
-            [imageViewForTransition setFrame:CGRectInset(self.FTDetailView.frame, -0.015*CGRectGetWidth(self.FTDetailView.frame), -0.015*CGRectGetHeight(self.FTDetailView.frame)) ];
-            imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
-        } completion:^(BOOL finished) {
-            [imageViewForTransition removeFromSuperview];
-            [hidingImageView removeFromSuperview];
-        }];
+//        [self.FTDetailView.detailCollectionView addSubview:hidingImageView];
+//        [self.view addSubview:imageViewForTransition];
+//        //animation effect configuration
+//        [self.FTDetailView setAlpha:0.0];
+//        [UIView animateWithDuration:0.2 animations:^{
+//            [self.FTDetailView setAlpha:1];
+//            [imageViewForTransition setFrame:CGRectInset(self.FTDetailView.frame, -0.015*CGRectGetWidth(self.FTDetailView.frame), -0.015*CGRectGetHeight(self.FTDetailView.frame)) ];
+//            imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
+//        } completion:^(BOOL finished) {
+//            [imageViewForTransition removeFromSuperview];
+//            [hidingImageView removeFromSuperview];
+//        }];
     }
 }
 

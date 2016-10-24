@@ -20,9 +20,16 @@
     if(!self.albumsArray){
         self.albumsArray = [[NSMutableArray alloc] init];
     }
+    [self fetchAlbums];
+    //Notification center observer
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAlbum) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+- (void) fetchAlbums{
     //Fetching cameraRoll
     PHFetchResult *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
     [cameraRoll enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        PHAssetCollection *collection = obj;
+        NSLog(@"%@",collection.localizedTitle);
         [self.albumsArray addObject:obj];
     }];
     
@@ -33,9 +40,10 @@
         PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
         //add albums which have at least one item in their album.
         if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+            PHAssetCollection *collection = obj;
+            NSLog(@"%@",collection.localizedTitle);
             [self.albumsArray addObject:obj];
         }
-        [self.albumsArray addObject:obj];
     }];
     //Fetching smart albums
     PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAny options:nil];
@@ -44,10 +52,17 @@
         PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:nil];
         //add albums which have at least one item in their album.
         if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+            PHAssetCollection *collection = obj;
+            NSLog(@"%@",collection.localizedTitle);
             [self.albumsArray addObject:obj];
         }
     }];
+}
 
+- (void) refreshAlbum{
+    [self.albumsArray removeAllObjects];
+    [self fetchAlbums];
+    [self.albumlistCollectionView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -116,6 +131,7 @@
         imagePickerViewController.delegate = (id)self.callerController;
         //get images from album
         FTAlbumListCollectionViewCell *cell = sender;
+        imagePickerViewController.albumName = cell.albumTitle.text;
         PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
         albumsFetchingOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
         PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetsInAssetCollection:cell.albumCollection options:albumsFetchingOptions];

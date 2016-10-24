@@ -122,95 +122,95 @@
     CGPoint translation = [sender translationInView:self.detailCollectionView];
     CGPoint location = [sender locationInView:self.ImagePickerCollectionView];
     if(sender.state == UIGestureRecognizerStateBegan){
-        //make a imageView For transition and configure
-        self.imageViewForTransition = [[UIImageView alloc] initWithFrame:self.ImagePickerCollectionView.bounds];
-        self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
-        self.imageViewForTransition.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.0];
-        //selected cell for get image from it
-        FTDetailViewCollectionViewCell *selectedCell = (FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
-        //assign image to imageview
-        self.imageViewForTransition.image = selectedCell.detailImageView.image;
-        //Image picker cell for destination point of transition
-        FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
-        //hide image in image picker for effect
-        [selectedCellInImagePicker.contentView setAlpha:0.0];
-        //hide image view in detail collection view
-        [selectedCell.detailImageView setAlpha:0.0];
-        //add imageView as subview of Image Picker collection view
-        [self addSubview:self.imageViewForTransition];
+//        //make a imageView For transition and configure
+//        self.imageViewForTransition = [[UIImageView alloc] initWithFrame:self.ImagePickerCollectionView.bounds];
+//        self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
+//        self.imageViewForTransition.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.0];
+//        //selected cell for get image from it
+//        FTDetailViewCollectionViewCell *selectedCell = (FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+//        //assign image to imageview
+//        self.imageViewForTransition.image = selectedCell.detailImageView.image;
+//        //Image picker cell for destination point of transition
+//        FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+//        //hide image in image picker for effect
+//        [selectedCellInImagePicker.contentView setAlpha:0.0];
+//        //hide image view in detail collection view
+//        [selectedCell.detailImageView setAlpha:0.0];
+//        //add imageView as subview of Image Picker collection view
+//        [self addSubview:self.imageViewForTransition];
     }
     else if(sender.state == UIGestureRecognizerStateChanged){
-        self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0 - translation.y*0.003];
-        [self.detailCollectionView setAlpha:1.0 -translation.y*0.003];
-        self.imageViewForTransition.center = location;
+//        self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0 - translation.y*0.003];
+//        [self.detailCollectionView setAlpha:1.0 -translation.y*0.003];
+//        self.imageViewForTransition.center = location;
     }
     else{
-        //selected cell in detail view
-        FTDetailViewCollectionViewCell *selectedCell = (FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
-        //Image picker cell for destination point of transition
-        FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
-        //dismiss detail view
-        if(translation.y > 20){
-            //Animation effect
-            [UIView animateWithDuration:0.2 animations:^{
-                [self.imageViewForTransition setFrame:selectedCellInImagePicker.frame];
-            } completion:^(BOOL finished) {
-                self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
-                [self.imageViewForTransition removeFromSuperview];
+//        //selected cell in detail view
+//        FTDetailViewCollectionViewCell *selectedCell = (FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+//        //Image picker cell for destination point of transition
+//        FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+//        //dismiss detail view
+//        if(translation.y > 20){
+//            //Animation effect
+//            [UIView animateWithDuration:0.2 animations:^{
+//                [self.imageViewForTransition setFrame:selectedCellInImagePicker.frame];
+//            } completion:^(BOOL finished) {
+//                self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
+//                [self.imageViewForTransition removeFromSuperview];
                 [self removeFromSuperview];
-                //show cell in image picker after transition
-                [selectedCellInImagePicker.contentView setAlpha:1.0];
-                //restore background coler of detail view and collection view
-                self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
-                [self.detailCollectionView setAlpha:1.0];
-                //restore image view in detail collection view
-                [selectedCell.detailImageView setAlpha:1.0];
-            }];
-        }
-        //cancel dismiss
-        else{
-            //Animation effect
-            [UIView animateWithDuration:0.2 animations:^{
-                [self.imageViewForTransition setFrame:self.ImagePickerCollectionView.bounds];
-            } completion:^(BOOL finished) {
-                [self.imageViewForTransition removeFromSuperview];
-                //show cell in image picker after transition
-                [selectedCellInImagePicker.contentView setAlpha:1.0];
-                //restore background coler of detail view and collection view
-                self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
-                [self.detailCollectionView setAlpha:1.0];
-                //restore image view in detail collection view
-                [selectedCell.detailImageView setAlpha:1.0];
-            }];
-        }
+//                //show cell in image picker after transition
+//                [selectedCellInImagePicker.contentView setAlpha:1.0];
+//                //restore background coler of detail view and collection view
+//                self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
+//                [self.detailCollectionView setAlpha:1.0];
+//                //restore image view in detail collection view
+//                [selectedCell.detailImageView setAlpha:1.0];
+//            }];
+//        }
+//        //cancel dismiss
+//        else{
+//            //Animation effect
+//            [UIView animateWithDuration:0.2 animations:^{
+//                [self.imageViewForTransition setFrame:self.ImagePickerCollectionView.bounds];
+//            } completion:^(BOOL finished) {
+//                [self.imageViewForTransition removeFromSuperview];
+//                //show cell in image picker after transition
+//                [selectedCellInImagePicker.contentView setAlpha:1.0];
+//                //restore background coler of detail view and collection view
+//                self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
+//                [self.detailCollectionView setAlpha:1.0];
+//                //restore image view in detail collection view
+//                [selectedCell.detailImageView setAlpha:1.0];
+//            }];
+//        }
     }
 }
 
 - (IBAction)dismissViewBtnClicked:(UIButton *)sender {
-    //make a imageView For transition and configure
-    UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:self.ImagePickerCollectionView.bounds];
-    imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
-    //selected cell for get image from it
-    FTDetailViewCollectionViewCell *selectedCell = (FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
-    //assign image to imageview
-    imageViewForTransition.image = selectedCell.detailImageView.image;
-    //add imageView as subview of Image Picker collection view
-    [self.ImagePickerCollectionView addSubview:imageViewForTransition];
-    //Image picker cell for destination point of transition
-    FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
-    //hide image in image picker for effect
-    [selectedCellInImagePicker.contentView setAlpha:0.0];
-    //Animation effect
-    [UIView animateWithDuration:0.2 animations:^{
-        [imageViewForTransition setFrame:selectedCellInImagePicker.frame];
-        [self setAlpha:0.0];
-    } completion:^(BOOL finished) {
-        imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
-        [imageViewForTransition removeFromSuperview];
+//    //make a imageView For transition and configure
+//    UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:self.ImagePickerCollectionView.bounds];
+//    imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
+//    //selected cell for get image from it
+//    FTDetailViewCollectionViewCell *selectedCell = (FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+//    //assign image to imageview
+//    imageViewForTransition.image = selectedCell.detailImageView.image;
+//    //add imageView as subview of Image Picker collection view
+//    [self.ImagePickerCollectionView addSubview:imageViewForTransition];
+//    //Image picker cell for destination point of transition
+//    FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+//    //hide image in image picker for effect
+//    [selectedCellInImagePicker.contentView setAlpha:0.0];
+//    //Animation effect
+//    [UIView animateWithDuration:0.2 animations:^{
+//        [imageViewForTransition setFrame:selectedCellInImagePicker.frame];
+//        [self setAlpha:0.0];
+//    } completion:^(BOOL finished) {
+//        imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
+//        [imageViewForTransition removeFromSuperview];
         [self removeFromSuperview];
-        //show cell in image picker after transition
-        [selectedCellInImagePicker.contentView setAlpha:1.0];
-    }];
+//        //show cell in image picker after transition
+//        [selectedCellInImagePicker.contentView setAlpha:1.0];
+//    }];
 }
 
 #pragma mark - select button clicked

@@ -23,6 +23,7 @@
         UINavigationController *navigationController = [storyBoard instantiateViewControllerWithIdentifier:@"FTImagePickerNavigationController"];
         [FTImagePickerViewController setDelegate:(id)viewController];
         albumListViewController.callerController = viewController;
+        FTImagePickerViewController.albumName =@"default";
         //Another setting for AlbumList and ImagePicker here!!
         //setting For mutiple selection of image picker
         FTImagePickerViewController.multipleSelectOn = NO;
