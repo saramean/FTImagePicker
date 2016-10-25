@@ -173,10 +173,10 @@
 #pragma mark - Dismiss View
 - (IBAction)dismissViewDownPan:(UIPanGestureRecognizer *)sender {
     CGPoint translation = [sender translationInView:self.detailCollectionView];
-    CGPoint location = [sender locationInView:self.ImagePickerCollectionView];
+    CGPoint location = [sender locationInView:self];
     if(sender.state == UIGestureRecognizerStateBegan){
         //make a imageView For transition and configure
-        self.imageViewForTransition = [[UIImageView alloc] initWithFrame:self.ImagePickerCollectionView.bounds];
+        self.imageViewForTransition = [[UIImageView alloc] initWithFrame:self.bounds];
         self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
         self.imageViewForTransition.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.0];
         //selected cell for get image from it
@@ -206,7 +206,10 @@
         if(translation.y > 20){
             //Animation effect
             [UIView animateWithDuration:0.2 animations:^{
-                [self.imageViewForTransition setFrame:selectedCellInImagePicker.frame];
+                CGRect convertedRect = [self.ImagePickerCollectionView convertRect:selectedCellInImagePicker.frame toView:[self.ImagePickerCollectionView superview]];
+                NSLog(@"converted frame x:%f, y:%f", convertedRect.origin.x, convertedRect.origin.y);
+                [self.imageViewForTransition setFrame:convertedRect];
+                NSLog(@"cell frame x:%f, y:%f", selectedCellInImagePicker.frame.origin.x, selectedCellInImagePicker.frame.origin.y);
             } completion:^(BOOL finished) {
                 self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
                 [self.imageViewForTransition removeFromSuperview];
