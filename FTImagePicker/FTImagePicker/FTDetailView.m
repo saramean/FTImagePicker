@@ -90,16 +90,47 @@
     NSLog(@"scroll view content offset x: %f, y: %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
     NSLog(@"scoll view targetConetnOffset x: %f, y: %f", targetContentOffset->x, targetContentOffset->y);
     [self selectBtnConfigure:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    [self moveImagePickersScrollToCurrentShowingItem:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+}
+
+- (NSIndexPath *) getCurrentShowingCellsIndexPath:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
+    NSArray *visibleItem = [NSArray arrayWithArray:[self.detailCollectionView indexPathsForVisibleItems]];
+    NSIndexPath *indexPathForCell;
+    NSIndexPath *firstObjectIndexPath = [visibleItem firstObject];
+    NSIndexPath *lastObjectIndexPath = [visibleItem lastObject];
+    if(targetContentOffset->x > scrollView.contentOffset.x){
+        if(firstObjectIndexPath.row > lastObjectIndexPath.row){
+            indexPathForCell = firstObjectIndexPath;
+        }
+        else{
+            indexPathForCell = lastObjectIndexPath;
+        }
+    }
+    //scroll view is heading -x direction
+    else{
+        if(firstObjectIndexPath.row < lastObjectIndexPath.row){
+            indexPathForCell = firstObjectIndexPath;
+        }
+        else{
+            indexPathForCell = lastObjectIndexPath;
+        }
+    }
+    return indexPathForCell;
+}
+
+- (void) moveImagePickersScrollToCurrentShowingItem: (UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
+    NSIndexPath *indexPathForCurrentCell = [self getCurrentShowingCellsIndexPath:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    [self.ImagePickerCollectionView scrollToItemAtIndexPath:indexPathForCurrentCell atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
 }
 
 - (__kindof UICollectionViewCell *) getCurrentShowingCell:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
     NSArray *visibleItem = [NSArray arrayWithArray:[self.detailCollectionView indexPathsForVisibleItems]];
     FTDetailViewCollectionViewCell *detailViewCell;
+    NSIndexPath *firstObjectIndexPath = [visibleItem firstObject];
+    NSIndexPath *lastObjectIndexPath = [visibleItem lastObject];
+    NSIndexPath *indexPathForCell;
     //scroll view is heading +x direction
     if(targetContentOffset->x > scrollView.contentOffset.x){
-        NSIndexPath *firstObjectIndexPath = [visibleItem firstObject];
-        NSIndexPath *lastObjectIndexPath = [visibleItem lastObject];
-        NSIndexPath *indexPathForCell;
         if(firstObjectIndexPath.row > lastObjectIndexPath.row){
             indexPathForCell = firstObjectIndexPath;
         }
@@ -110,9 +141,6 @@
     }
     //scroll view is heading -x direction
     else{
-        NSIndexPath *firstObjectIndexPath = [visibleItem firstObject];
-        NSIndexPath *lastObjectIndexPath = [visibleItem lastObject];
-        NSIndexPath *indexPathForCell;
         if(firstObjectIndexPath.row < lastObjectIndexPath.row){
             indexPathForCell = firstObjectIndexPath;
         }
