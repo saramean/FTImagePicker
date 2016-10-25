@@ -157,6 +157,9 @@
                                         <frame key="frameInset" minY="48.15%" width="44" height="30" maxX="19"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Select"/>
+                                        <connections>
+                                            <action selector="multiSelectConfirmedSelectBtnClicked:" destination="kqN-Lu-1hX" eventType="touchUpInside" id="OFY-Jq-WDX"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rhm-1v-pZe">
                                         <frame key="frameInset" minX="18" minY="48.15%" width="44" height="30"/>
@@ -214,9 +217,10 @@
                                                 <frame key="frameInset"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h4j-dp-bmF">
-                                                        <rect key="frame" x="0.0" y="-1" width="1500" height="2664"/>
+                                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h4j-dp-bmF">
+                                                        <rect key="frame" x="0.0" y="-1" width="375" height="667"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        <gestureRecognizers/>
                                                     </imageView>
                                                 </subviews>
                                             </scrollView>

@@ -33,9 +33,11 @@
         //setting For mutiple selection of image picker
 #pragma mark - Multiple Selection Option
         FTImagePickerViewController.multipleSelectOn = YES;
-        FTImagePickerViewController.multipleSecletMax = 9;
+        FTImagePickerViewController.multipleSelectMin = 9;
+        FTImagePickerViewController.multipleSelectMax = 9;
+        FTImagePickerViewController.selectedItemCount = 0;
         albumListViewController.multipleSelectOn = FTImagePickerViewController.multipleSelectOn;
-        albumListViewController.multipleSelectMax = FTImagePickerViewController.multipleSecletMax;
+        albumListViewController.multipleSelectMax = FTImagePickerViewController.multipleSelectMax;
         
 #pragma mark - Album Selection Option
         //Setting which albums will be used in the app
@@ -72,7 +74,7 @@
 //            ImagesOnly = 1,
 //            VideosOnly = 2,
 //            ImagesAndVideos = 3,
-        albumListViewController.mediaTypeToUse = ImagesOnly;
+        albumListViewController.mediaTypeToUse = 3;
         FTImagePickerViewController.mediaTypeToUse = albumListViewController.mediaTypeToUse;
         
         

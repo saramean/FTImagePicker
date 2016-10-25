@@ -1,0 +1,13 @@
+Problems
+- When the app enter the background and return to the foreground, in image picker, all the selected info is discarded by reload data method of collection view.
+- When comming back from detail view, updated info is not reflected to the image picker (Cell doesn't refresh itself) if reload data called, all selected info is gone.
+- When going and back to albumlist, initialize selections.
+- When Pinchdown in Detail view, animation is not proper for cell is not showing in first page of image picker
+
+To do List
+- Play Live Photoes? in Detail View
+
+
+Completed
+- Play Video in Detail View
+- add minimum select integer to all the controllers to avoid errors.

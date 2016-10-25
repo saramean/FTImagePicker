@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4E403F421DB8B2DE0037B2B2 /* FTImagePickerCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E403F411DB8B2DE0037B2B2 /* FTImagePickerCells.m */; };
+		4E8BBE031DBF4EF40072BAD2 /* WorkingProcess in Resources */ = {isa = PBXBuildFile; fileRef = 4E8BBE021DBF4EF40072BAD2 /* WorkingProcess */; };
 		4EA41DC51DB894EF00356832 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DC41DB894EF00356832 /* main.m */; };
 		4EA41DC81DB894EF00356832 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DC71DB894EF00356832 /* AppDelegate.m */; };
 		4EA41DCB1DB894EF00356832 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DCA1DB894EF00356832 /* ViewController.m */; };
@@ -26,6 +27,7 @@
 /* Begin PBXFileReference section */
 		4E403F411DB8B2DE0037B2B2 /* FTImagePickerCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FTImagePickerCells.m; path = FTImagePicker/FTImagePickerCells.m; sourceTree = "<group>"; };
 		4E403F431DB8B3010037B2B2 /* FTImagePickerCells.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FTImagePickerCells.h; path = FTImagePicker/FTImagePickerCells.h; sourceTree = "<group>"; };
+		4E8BBE021DBF4EF40072BAD2 /* WorkingProcess */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = WorkingProcess; path = FTImagePicker/WorkingProcess; sourceTree = "<group>"; };
 		4EA41DC01DB894EF00356832 /* FTImagePicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FTImagePicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EA41DC41DB894EF00356832 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4EA41DC61DB894EF00356832 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = FTImagePicker/AppDelegate.h; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 				4E403F431DB8B3010037B2B2 /* FTImagePickerCells.h */,
 				4E403F411DB8B2DE0037B2B2 /* FTImagePickerCells.m */,
 				4EA41DDF1DB8959600356832 /* FTImagePickerStoryBoard.storyboard */,
+				4E8BBE021DBF4EF40072BAD2 /* WorkingProcess */,
 				4EA41DE11DB898A700356832 /* FTImagePickerAssets.xcassets */,
 			);
 			path = FTImagePicker;
@@ -181,6 +184,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E8BBE031DBF4EF40072BAD2 /* WorkingProcess in Resources */,
 				4EA41DD61DB894EF00356832 /* LaunchScreen.storyboard in Resources */,
 				4EA41DE01DB8959600356832 /* FTImagePickerStoryBoard.storyboard in Resources */,
 				4EA41DD31DB894EF00356832 /* Assets.xcassets in Resources */,

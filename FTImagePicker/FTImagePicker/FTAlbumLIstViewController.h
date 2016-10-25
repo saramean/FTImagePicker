@@ -13,7 +13,10 @@
 @interface FTAlbumLIstViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 //multiple selection on boolean value for enabling multiple touch in the image picker
 @property (nonatomic) BOOL multipleSelectOn;
+@property (nonatomic) NSInteger multipleSelectMin;
 @property (nonatomic) NSInteger multipleSelectMax;
+@property (nonatomic) NSInteger selectedItemCount;
+@property (strong, nonatomic) NSMutableDictionary *selectedItemsDictionary;
 @property (nonatomic) NSInteger mediaTypeToUse;
 @property (strong, nonatomic) NSArray *regularAlbums;
 @property (strong, nonatomic) NSArray *smartAlbums;

@@ -24,10 +24,13 @@
 @property (nonatomic) CGFloat scaleCriteria;
 @property (nonatomic) NSInteger cellScaleFactor;
 @property (nonatomic) BOOL multipleSelectOn;
-@property (nonatomic) NSInteger multipleSecletMax;
+@property (nonatomic) NSInteger multipleSelectMin;
+@property (nonatomic) NSInteger multipleSelectMax;
+@property (nonatomic) NSInteger selectedItemCount;
 @property (nonatomic) NSInteger mediaTypeToUse;
 @property (nonatomic) NSString *cameraRollLocalTitle;
 @property (strong, nonatomic) NSMutableArray *selectedItemsArray;
+@property (strong, nonatomic) NSMutableDictionary *selectedItemsDictionary;
 @property (weak, nonatomic) IBOutlet UIButton *selectBtn;
 @property (weak, nonatomic) id<FTImagePickerViewControllerDelegate> delegate;
 @property (strong, nonatomic) NSString *albumName;
@@ -38,6 +41,7 @@
 - (IBAction)showDetailCellLongPressed:(UILongPressGestureRecognizer *)sender;
 - (IBAction)cellZoomInOutPinch:(UIPinchGestureRecognizer *)sender;
 - (IBAction)cancelImagePickerBtnClicked:(UIButton *)sender;
+- (IBAction)multiSelectConfirmedSelectBtnClicked:(id)sender;
 
 
 @end

@@ -21,6 +21,9 @@
         self.albumsArray = [[NSMutableArray alloc] init];
     }
     [self fetchAlbums];
+    if(!self.selectedItemsDictionary && self.multipleSelectOn){
+        self.selectedItemsDictionary = [[NSMutableDictionary alloc] init];
+    }
     //Notification center observer
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAlbum) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
@@ -150,7 +153,8 @@
         FTImagePickerViewController *imagePickerViewController = segue.destinationViewController;
         //configure multiple selection setting
         imagePickerViewController.multipleSelectOn = self.multipleSelectOn;
-        imagePickerViewController.multipleSecletMax = self.multipleSelectMax;
+        imagePickerViewController.multipleSelectMin = self.multipleSelectMin;
+        imagePickerViewController.multipleSelectMax = self.multipleSelectMax;
         //set delegate
         imagePickerViewController.delegate = (id)self.callerController;
         //set mediatype
