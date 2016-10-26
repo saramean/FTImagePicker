@@ -180,8 +180,14 @@
 //if movement toward y direction is larger than direction toward x, gesture recognizer begins
 //else, collection view's normal pan handle its scroll
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    CGPoint location = [gestureRecognizer locationInView:self];
     if([gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]){
-        return YES;
+        if(location.y > self.frame.size.height - 100){
+            return NO;
+        }
+        else{
+            return YES;
+        }
     }
     else if([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]){
         UIPanGestureRecognizer *panGestureRecognizer = (UIPanGestureRecognizer *) gestureRecognizer;
@@ -321,6 +327,7 @@
             if(self.selectedItemCount < self.multipleSelectMax){
                 [self.detailCollectionView selectItemAtIndexPath:itemToBeSelectedOrDeselected[0] animated:YES scrollPosition:UICollectionViewScrollPositionNone];
                 [self.ImagePickerCollectionView selectItemAtIndexPath:itemToBeSelectedOrDeselected[0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+                [self.delegate enforceCellToSelectUpdateLayout:itemToBeSelectedOrDeselected[0]];
                 [sender setTitle:@"Deselect" forState:UIControlStateNormal];
                 detailViewCell.layer.borderWidth = 2.0;
                 detailViewCell.layer.borderColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
@@ -339,6 +346,7 @@
         else{
             [self.detailCollectionView deselectItemAtIndexPath:itemToBeSelectedOrDeselected[0] animated:YES];
             [self.ImagePickerCollectionView deselectItemAtIndexPath: itemToBeSelectedOrDeselected[0] animated:NO];
+            [self.delegate enforceCellToDeselectAndUpdateLayout:itemToBeSelectedOrDeselected[0]];
             [sender setTitle:@"Select" forState:UIControlStateNormal];
             detailViewCell.layer.borderWidth = 0;
             detailViewCell.layer.borderColor = nil;

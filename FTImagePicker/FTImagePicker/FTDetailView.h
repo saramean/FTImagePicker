@@ -16,6 +16,8 @@
 - (void) singleSelectionModeSelectionConfirmed: (NSMutableArray *) selectedAssetArray;
 - (void) sendSelectedItemsToImagePicker: (NSMutableArray *) selectedItemsArray selectedItemCount: (NSInteger) selectedItemCount;
 - (void) presentAlertController: (UIAlertController *) alertController;
+- (void) enforceCellToSelectUpdateLayout: (NSIndexPath *) indexPathForUpdatingCell;
+- (void) enforceCellToDeselectAndUpdateLayout: (NSIndexPath *) indexPathForUpdatingCell;
 
 @end
 

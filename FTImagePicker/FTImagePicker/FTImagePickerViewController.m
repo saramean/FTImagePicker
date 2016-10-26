@@ -72,6 +72,7 @@
     //pass assets to detail view
     self.FTDetailView.allAssets = self.allAssets;
     [self.FTimagePickerCollectionView reloadData];
+    [self.FTDetailView.detailCollectionView reloadData];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -179,6 +180,8 @@
         [self.selectedItemsArray addObject:indexPath];
         self.selectedItemCount += 1;
         NSLog(@"selected count %d", (int)self.selectedItemCount);
+        //force collectionview in detailview to update selected cell layout
+        [self.FTDetailView collectionView:self.FTDetailView.detailCollectionView didSelectItemAtIndexPath:indexPath];
     }
 }
 
@@ -213,6 +216,8 @@
     }
     self.selectedItemCount -= 1;
     NSLog(@"selected count %d", (int)self.selectedItemCount);
+    //force collectionview in detailview to update deselected cell layout
+    [self.FTDetailView collectionView:self.FTDetailView.detailCollectionView didDeselectItemAtIndexPath:indexPath];
 }
 
 #pragma mark - Communication With Detail View
@@ -282,6 +287,15 @@
     float cellWidth = floor((screenWidth-(self.cellScaleFactor-1))/self.cellScaleFactor);
     return CGSizeMake(cellWidth, cellWidth);
 }
+
+- (void) enforceCellToSelectUpdateLayout:(NSIndexPath *)indexPathForUpdatingCell{
+    [self collectionView:self.FTimagePickerCollectionView didSelectItemAtIndexPath:indexPathForUpdatingCell];
+}
+
+- (void) enforceCellToDeselectAndUpdateLayout:(NSIndexPath *)indexPathForUpdatingCell{
+    [self collectionView:self.FTimagePickerCollectionView didDeselectItemAtIndexPath:indexPathForUpdatingCell];
+}
+
 #pragma mark - Back To application from picker
 - (void) didFinishSelectPhotosFromImagePicker{
     [self.delegate getSelectedImageAssetsFromImagePicker:self.selectedItemsArray];
