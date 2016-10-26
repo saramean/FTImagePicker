@@ -61,7 +61,7 @@
 //        PHAssetCollectionSubtypeSmartAlbumTimelapses = 204,     Time-lapse
 //        PHAssetCollectionSubtypeSmartAlbumAllHidden  = 205,
 //        PHAssetCollectionSubtypeSmartAlbumRecentlyAdded = 206,  RecentlyAdded
-//        PHAssetCollectionSubtypeSmartAlbumBursts     = 207,
+//        PHAssetCollectionSubtypeSmartAlbumBursts     = 207,     연사
 //        PHAssetCollectionSubtypeSmartAlbumSlomoVideos = 208,    Slo-mo
 //        PHAssetCollectionSubtypeSmartAlbumUserLibrary = 209,    Camer Roll
 //        PHAssetCollectionSubtypeSmartAlbumSelfPortraits PHOTOS_AVAILABLE_IOS_TVOS(9_0, 10_0) = 210,  Selfie
@@ -75,7 +75,7 @@
 //            ImagesOnly = 1,
 //            VideosOnly = 2,
 //            ImagesAndVideos = 3,
-        albumListViewController.mediaTypeToUse = 3;
+        albumListViewController.mediaTypeToUse = ImagesOnly;
         FTImagePickerViewController.mediaTypeToUse = albumListViewController.mediaTypeToUse;
         
         

@@ -14,15 +14,15 @@
 @protocol FTDetailViewDelegate <NSObject>
 
 - (void) singleSelectionModeSelectionConfirmed: (NSMutableArray *) selectedAssetArray;
-- (void) sendSelectedItemsToImagePicker: (NSMutableArray *) selectedItemsArray selectedItemCount: (NSInteger) selectedItemCount;
 - (void) presentAlertController: (UIAlertController *) alertController;
+- (void) presentAVPlayerViewController: (AVPlayerViewController *) AVPlayerViewController AVPlayer:(AVPlayer *) AVPlayer;
 - (void) enforceCellToSelectUpdateLayout: (NSIndexPath *) indexPathForUpdatingCell;
 - (void) enforceCellToDeselectAndUpdateLayout: (NSIndexPath *) indexPathForUpdatingCell;
 
 @end
 
 
-@interface FTDetailView : UIView <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate, UIGestureRecognizerDelegate>
+@interface FTDetailView : UIView <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate, UIGestureRecognizerDelegate, cellSelectionLayoutChange>
 @property (strong, nonatomic) NSMutableArray *allAssets;
 @property (nonatomic) BOOL multipleSelectOn;
 @property (nonatomic) NSInteger multipleSelectMin;

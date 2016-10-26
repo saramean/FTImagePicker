@@ -60,6 +60,16 @@
     //Notification center observer
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshImagePicker) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (BOOL)prefersStatusBarHidden{
+    return YES;
+}
+
+#pragma mark - Refresh image picker
 - (void) refreshImagePicker{
     [self.allAssets removeAllObjects];
     if([self.albumName isEqualToString:self.cameraRollLocalTitle]){
@@ -75,13 +85,6 @@
     [self.FTDetailView.detailCollectionView reloadData];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-- (BOOL)prefersStatusBarHidden{
-    return YES;
-}
 
 #pragma mark - Image Fetching
 - (void) fetchAllImageOrVideoFromDevice {
@@ -173,9 +176,7 @@
         //selection is only available when selected items count is below or equeal to multiple select max count
         //This limitation is defined in collectionView shouldSelectItemAtIndexPath method.
         FTImagePickerCollectionViewCell *imagePickerCell = (FTImagePickerCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
-        imagePickerCell.layer.borderWidth = 2.0;
-        imagePickerCell.layer.borderColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
-        imagePickerCell.alpha = 0.5;
+        [self selectedCellLayoutChange:imagePickerCell];
         [self.FTDetailView.detailCollectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
         [self.selectedItemsArray addObject:indexPath];
         self.selectedItemCount += 1;
@@ -205,9 +206,7 @@
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
     //multiple selection mode
     FTImagePickerCollectionViewCell *imagePickerCell = (FTImagePickerCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
-    imagePickerCell.layer.borderWidth = 0;
-    imagePickerCell.layer.borderColor = nil;
-    imagePickerCell.alpha = 1.0;
+    [self deselectedCellLayoutChange:imagePickerCell];
     [self.FTDetailView.detailCollectionView deselectItemAtIndexPath:indexPath animated:NO];
     for(int i = 0; i < self.selectedItemsArray.count; i++){
         if(self.selectedItemsArray[i] == indexPath){
@@ -218,6 +217,19 @@
     NSLog(@"selected count %d", (int)self.selectedItemCount);
     //force collectionview in detailview to update deselected cell layout
     [self.FTDetailView collectionView:self.FTDetailView.detailCollectionView didDeselectItemAtIndexPath:indexPath];
+}
+
+#pragma mark - Selected and Deselected cells layout
+- (void) selectedCellLayoutChange:(__kindof UICollectionViewCell *)selectedCell{
+    selectedCell.layer.borderWidth = 2.0;
+    selectedCell.layer.borderColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
+    selectedCell.alpha = 0.5;
+}
+
+- (void) deselectedCellLayoutChange:(__kindof UICollectionViewCell *)deselectedCell{
+    deselectedCell.layer.borderWidth = 0;
+    deselectedCell.layer.borderColor = nil;
+    deselectedCell.alpha = 1.0;
 }
 
 #pragma mark - Communication With Detail View
@@ -233,12 +245,11 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-//delegate for receiving selected Items and count
-- (void) sendSelectedItemsToImagePicker:(NSMutableArray *)selectedItemsArray selectedItemCount:(NSInteger)selectedItemCount{
-    self.selectedItemsArray = selectedItemsArray;
-    self.selectedItemCount = selectedItemCount;
+//delegate for playing videos
+- (void) presentAVPlayerViewController:(AVPlayerViewController *)AVPlayerViewController AVPlayer:(AVPlayer *)AVPlayer{
+    [self presentViewController:AVPlayerViewController animated:NO completion:nil];
+    [AVPlayer play];
 }
-
 #pragma mark - Configuring Collection View
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
@@ -268,14 +279,10 @@
     }];
     //Because cell is reused when user scroll down or up collection view. it is needed to set cell's status by their selection property
     if(cell.selected){
-        cell.layer.borderWidth = 2.0;
-        cell.layer.borderColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
-        cell.alpha = 0.5;
+        [self selectedCellLayoutChange:cell];
     }
     else{
-        cell.layer.borderWidth = 0;
-        cell.layer.borderColor = nil;
-        cell.alpha = 1;
+        [self deselectedCellLayoutChange:cell];
     }
     
     return cell;
@@ -315,9 +322,14 @@
         for(NSIndexPath *indexPath in tempArrayForSelectedIndexPath){
             [self.selectedItemsArray addObject:self.allAssets[indexPath.row]];
         }
+        NSLog(@"sent items %d", (int)self.selectedItemsArray.count);
         [self.delegate getSelectedImageAssetsFromImagePicker:self.selectedItemsArray];
         [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     }
+}
+
+- (IBAction)cancelImagePickerBtnClicked:(UIButton *)sender {
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Navigation Controll
@@ -447,8 +459,5 @@
 }
 
 
-- (IBAction)cancelImagePickerBtnClicked:(UIButton *)sender {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-}
 
 @end

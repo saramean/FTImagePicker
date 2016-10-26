@@ -20,17 +20,13 @@
     //multiple selection mode
     else{
         FTDetailViewCollectionViewCell *cell = (FTDetailViewCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
-        cell.layer.borderWidth = 2.0;
-        cell.layer.borderColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
-        cell.alpha = 0.5;
+        [self selectedCellLayoutChange:cell];
     }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath{
     FTDetailViewCollectionViewCell *cell = (FTDetailViewCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
-    cell.layer.borderWidth = 0;
-    cell.layer.borderColor = nil;
-    cell.alpha = 1.0;
+    [self deselectedCellLayoutChange:cell];
 }
 
 #pragma mark - Configuring Cells
@@ -63,18 +59,23 @@
         }
     }];
     if(cell.selected){
-        cell.layer.borderWidth = 2.0;
-        cell.layer.borderColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
-        cell.alpha = 0.5;
+        [self selectedCellLayoutChange:cell];
     }
     else{
-        cell.layer.borderWidth = 0;
-        cell.layer.borderColor = nil;
-        cell.alpha = 1.0;
+        [self deselectedCellLayoutChange:cell];
     }
     return cell;
 }
 #pragma mark - Scroll View Delegate
+//make sure add correct item by select button
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
+    self.selectBtn.enabled = NO;
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
+    self.selectBtn.enabled = YES;
+}
+
 //scroll view delegate
 - (UIView *) viewForZoomingInScrollView:(UIScrollView *)scrollView{
     for (UIView *view in scrollView.subviews){
@@ -98,9 +99,9 @@
 - (void) scrollViewZoomReset:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
     if(self.currentShowingCellsIndexPath != [self getCurrentShowingCellsIndexPath:scrollView withVelocity:velocity targetContentOffset:targetContentOffset]){
         FTDetailViewCollectionViewCell *previousCell = (__kindof UICollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:self.currentShowingCellsIndexPath];
-        [UIView animateWithDuration:0.3 animations:^{
+        [UIView animateWithDuration:0 delay:0.3 options:UIViewAnimationOptionTransitionNone animations:^{
             previousCell.scrollViewForZoom.zoomScale = 1.0;
-        }];
+        } completion:nil];
         self.currentShowingCellsIndexPath = [self getCurrentShowingCellsIndexPath:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     }
 }
@@ -269,8 +270,6 @@
                 [self.detailCollectionView setAlpha:1.0];
                 //restore image view in detail collection view
                 [selectedCell.detailImageView setAlpha:1.0];
-                //send selected item to image picker
-                [self.delegate sendSelectedItemsToImagePicker:self.selectedItemsArray selectedItemCount:self.selectedItemCount];
             }];
         }
         //cancel dismiss
@@ -316,8 +315,6 @@
         [self removeFromSuperview];
         //show cell in image picker after transition
         [selectedCellInImagePicker.contentView setAlpha:1.0];
-        //send selected item to image picker
-        [self.delegate sendSelectedItemsToImagePicker:self.selectedItemsArray selectedItemCount:self.selectedItemCount];
     }];
 }
 
@@ -336,6 +333,7 @@
     //multiple select action
     else{
         NSArray *itemToBeSelectedOrDeselected = [NSArray arrayWithArray:[self.detailCollectionView indexPathsForVisibleItems]];
+        NSLog(@"itemToBeSelectedOrDeselected count %d", (int) itemToBeSelectedOrDeselected.count);
         FTDetailViewCollectionViewCell *detailViewCell =(FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:itemToBeSelectedOrDeselected[0]];
         if([sender.currentTitle isEqualToString:@"Select"]){
             if(self.selectedItemCount < self.multipleSelectMax){
@@ -343,11 +341,11 @@
                 [self.ImagePickerCollectionView selectItemAtIndexPath:itemToBeSelectedOrDeselected[0] animated:NO scrollPosition:UICollectionViewScrollPositionNone];
                 [self.delegate enforceCellToSelectUpdateLayout:itemToBeSelectedOrDeselected[0]];
                 [sender setTitle:@"Deselect" forState:UIControlStateNormal];
-                detailViewCell.layer.borderWidth = 2.0;
-                detailViewCell.layer.borderColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
-                detailViewCell.alpha = 0.5;
-                [self.selectedItemsArray addObject:itemToBeSelectedOrDeselected[0]];
+                [self selectedCellLayoutChange:detailViewCell];
+                //addObject Action occurs in delegate(enforceCellToSelectUpdateLayout)
+                //[self.selectedItemsArray addObject:itemToBeSelectedOrDeselected[0]];
                 self.selectedItemCount += 1;
+                NSLog(@"selected items array count %d", (int)self.selectedItemsArray.count);
                 NSLog(@"selected count %d", (int)self.selectedItemCount);
             }
             else{
@@ -362,18 +360,30 @@
             [self.ImagePickerCollectionView deselectItemAtIndexPath: itemToBeSelectedOrDeselected[0] animated:NO];
             [self.delegate enforceCellToDeselectAndUpdateLayout:itemToBeSelectedOrDeselected[0]];
             [sender setTitle:@"Select" forState:UIControlStateNormal];
-            detailViewCell.layer.borderWidth = 0;
-            detailViewCell.layer.borderColor = nil;
-            detailViewCell.alpha = 1.0;
-            for(int i = 0; i < self.selectedItemsArray.count; i++){
-                if(self.selectedItemsArray[i] == itemToBeSelectedOrDeselected[0]){
-                    [self.selectedItemsArray removeObjectAtIndex:i];
-                }
-            }
+            [self deselectedCellLayoutChange:detailViewCell];
+            //removeObject Action occurs in delegate(enforceCellToDeselectAndUpdateLayout)
+//            for(int i = 0; i < self.selectedItemsArray.count; i++){
+//                if(self.selectedItemsArray[i] == itemToBeSelectedOrDeselected[0]){
+//                    [self.selectedItemsArray removeObjectAtIndex:i];
+//                }
+//            }
             self.selectedItemCount -= 1;
             NSLog(@"selected count %d", (int)self.selectedItemCount);
         }
     }
+}
+
+#pragma mark - Selected and Deselected cells layout
+- (void) selectedCellLayoutChange:(__kindof UICollectionViewCell *)selectedCell{
+    selectedCell.layer.borderWidth = 2.0;
+    selectedCell.layer.borderColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.8].CGColor;
+    selectedCell.alpha = 0.5;
+}
+
+- (void) deselectedCellLayoutChange:(__kindof UICollectionViewCell *)deselectedCell{
+    deselectedCell.layer.borderWidth = 0;
+    deselectedCell.layer.borderColor = nil;
+    deselectedCell.alpha = 1.0;
 }
 
 #pragma mark - Play Videos
@@ -389,24 +399,25 @@
             self.videoPlayerViewController.player = videoPlayer;
             [self.videoPlayerViewController.view setFrame:self.bounds];
             self.videoPlayerViewController.showsPlaybackControls = YES;
-            //Button For Back To Detail View
-            UIButton *backToDetailViewBtn = [[UIButton alloc] initWithFrame:CGRectMake(18, 60, 44, 30)];
-            [backToDetailViewBtn setTitle:@"Back" forState:UIControlStateNormal];
-            [backToDetailViewBtn addTarget:self action:@selector(dismissVideoPlayer:) forControlEvents:UIControlEventTouchUpInside];
-            [self.videoPlayerViewController.view addSubview:backToDetailViewBtn];
-            //Edge Pan Gesture for same job with back button
-            UIScreenEdgePanGestureRecognizer *edgePanGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(dismissVideoPlayer:)];
-            edgePanGesture.edges = UIRectEdgeLeft;
-            edgePanGesture.delegate = self;
-            [self.videoPlayerViewController.view addGestureRecognizer:edgePanGesture];
-            [self addSubview:self.videoPlayerViewController.view];
-            [videoPlayer play];
+//            //Button For Back To Detail View
+//            UIButton *backToDetailViewBtn = [[UIButton alloc] initWithFrame:CGRectMake(18, 60, 44, 30)];
+//            [backToDetailViewBtn setTitle:@"Back" forState:UIControlStateNormal];
+//            [backToDetailViewBtn addTarget:self action:@selector(dismissVideoPlayer:) forControlEvents:UIControlEventTouchUpInside];
+//            [self.videoPlayerViewController.view addSubview:backToDetailViewBtn];
+//            //Edge Pan Gesture for same job with back button
+//            UIScreenEdgePanGestureRecognizer *edgePanGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(dismissVideoPlayer:)];
+//            edgePanGesture.edges = UIRectEdgeLeft;
+//            edgePanGesture.delegate = self;
+//            [self.videoPlayerViewController.view addGestureRecognizer:edgePanGesture];
+            [self.delegate presentAVPlayerViewController:self.videoPlayerViewController AVPlayer:videoPlayer];
+//            [self addSubview:self.videoPlayerViewController.view];
+//            [videoPlayer play];
         });
     }];
 }
-
-- (void) dismissVideoPlayer:(id) sender {
-    [self.videoPlayerViewController.view removeFromSuperview];
-}
+//
+//- (void) dismissVideoPlayer:(id) sender {
+//    [self.videoPlayerViewController.view removeFromSuperview];
+//}
 
 @end

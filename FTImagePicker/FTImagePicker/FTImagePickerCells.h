@@ -14,6 +14,13 @@
 #import <UIKit/UIKit.h>
 @import Photos;
 
+@protocol cellSelectionLayoutChange <NSObject>
+@optional
+- (void) selectedCellLayoutChange: (__kindof UICollectionViewCell *) selectedCell;
+- (void) deselectedCellLayoutChange: (__kindof UICollectionViewCell *) deselectedCell;
+@end
+
+
 @interface FTAlbumListCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UILabel *albumTitle;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView1;
