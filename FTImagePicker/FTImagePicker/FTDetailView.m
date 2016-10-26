@@ -85,12 +85,24 @@
     return nil;
 }
 
-//Check focused item is selected item or not
+//did delegate is used to get current showing cell's information by scroll
 - (void) scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
     NSLog(@"scroll view content offset x: %f, y: %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
     NSLog(@"scoll view targetConetnOffset x: %f, y: %f", targetContentOffset->x, targetContentOffset->y);
     [self selectBtnConfigure:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     [self moveImagePickersScrollToCurrentShowingItem:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    [self scrollViewZoomReset:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    
+}
+
+- (void) scrollViewZoomReset:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
+    if(self.currentShowingCellsIndexPath != [self getCurrentShowingCellsIndexPath:scrollView withVelocity:velocity targetContentOffset:targetContentOffset]){
+        FTDetailViewCollectionViewCell *previousCell = (__kindof UICollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:self.currentShowingCellsIndexPath];
+        [UIView animateWithDuration:0.3 animations:^{
+            previousCell.scrollViewForZoom.zoomScale = 1.0;
+        }];
+        self.currentShowingCellsIndexPath = [self getCurrentShowingCellsIndexPath:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    }
 }
 
 - (NSIndexPath *) getCurrentShowingCellsIndexPath:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
@@ -152,6 +164,7 @@
     return detailViewCell;
 }
 
+//Check focused item is selected item or not
 - (void) selectBtnConfigure:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *) targetContentOffset{
     FTDetailViewCollectionViewCell *detailViewCell = [self getCurrentShowingCell:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     if(detailViewCell.selected){
@@ -182,6 +195,7 @@
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
     CGPoint location = [gestureRecognizer locationInView:self];
     if([gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]){
+        //For preventing dismiss video player when video player control bar slider controled
         if(location.y > self.frame.size.height - 100){
             return NO;
         }

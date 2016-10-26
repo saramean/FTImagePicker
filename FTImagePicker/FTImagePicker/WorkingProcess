@@ -1,7 +1,7 @@
 Problems
 - When the app enter the background and return to the foreground, in image picker, all the selected info is discarded by reload data method of collection view.
 - When going and back to albumlist, initialize selections.
-Idea. Use NSDictionary for saving selected images with its album name
+  = Idea. Use NSDictionary for saving selected images with its album name
 
 
 To do List

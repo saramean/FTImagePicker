@@ -347,6 +347,8 @@
         //get index path from long pressed point
         CGPoint location = [sender locationInView:self.FTimagePickerCollectionView];
         NSIndexPath *indexPath = [self.FTimagePickerCollectionView indexPathForItemAtPoint:location];
+        //set current showing cell's index path value for detailview
+        self.FTDetailView.currentShowingCellsIndexPath = indexPath;
         //scroll to show selected image
         [self.FTDetailView.detailCollectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
         //show sub view

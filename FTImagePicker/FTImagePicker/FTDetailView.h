@@ -35,7 +35,8 @@
 @property (strong, nonatomic) UIImageView *imageViewForTransition;
 @property (strong, nonatomic) AVPlayerViewController *videoPlayerViewController;
 @property (weak, nonatomic) id<FTDetailViewDelegate> delegate;
-@property (nonatomic) float targetContentX; //variable for checking scroll view's movements
+@property (strong, nonatomic) NSIndexPath *currentShowingCellsIndexPath;
+//@property (nonatomic) float targetContentX; //variable for checking scroll view's movements
 
 - (IBAction)dismissViewDownPan:(UIPanGestureRecognizer *)sender;
 - (IBAction)dismissViewBtnClicked:(UIButton *)sender;

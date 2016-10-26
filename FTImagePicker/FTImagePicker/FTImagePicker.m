@@ -38,6 +38,7 @@
         FTImagePickerViewController.selectedItemCount = 0;
         albumListViewController.multipleSelectOn = FTImagePickerViewController.multipleSelectOn;
         albumListViewController.multipleSelectMax = FTImagePickerViewController.multipleSelectMax;
+        albumListViewController.multipleSelectMin = FTImagePickerViewController.multipleSelectMin;
         
 #pragma mark - Album Selection Option
         //Setting which albums will be used in the app
