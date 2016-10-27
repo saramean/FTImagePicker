@@ -24,17 +24,45 @@
     if(!self.selectedItemsDictionary && self.multipleSelectOn){
         self.selectedItemsDictionary = [[NSMutableDictionary alloc] init];
     }
+    //set Theme of album list
+    [self changeTheme:self.theme];
+    
     //Notification center observer
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshAlbum) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Theme
+- (void) changeTheme: (NSInteger) theme{
+    //white version
+    if(theme == 0){
+        self.albumlistCollectionView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
+        self.albumTitleColor = [UIColor colorWithWhite:0.25 alpha:1.0];
+        self.albumCellBorderColor = [UIColor colorWithWhite:0.0 alpha:0.1].CGColor;
+    }
+    //black version
+    else if(theme == 1){
+        self.albumlistCollectionView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
+        self.albumTitleColor = [UIColor colorWithWhite:0.65 alpha:1.0];
+        self.albumCellBorderColor = [UIColor colorWithWhite:1.0 alpha:0.1].CGColor;
+    }
+}
+
+#pragma mark - Fetching albums
 - (void) fetchAlbums{
     //Fetching cameraRoll
-    PHFetchResult *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
-    [cameraRoll enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        //PHAssetCollection *collection = obj;
-        //NSLog(@"%@",collection.localizedTitle);
-        [self.albumsArray addObject:obj];
-    }];
+    if(self.useCameraRoll){
+        PHFetchResult *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
+        [cameraRoll enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            //PHAssetCollection *collection = obj;
+            //NSLog(@"%@",collection.localizedTitle);
+            [self.albumsArray addObject:obj];
+        }];
+    }
     for(NSNumber *album in self.regularAlbums){
         //Fetching user albums
         PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:[album integerValue] options:nil];
@@ -79,15 +107,11 @@
     }
 }
 
+#pragma mark - Refresh Album
 - (void) refreshAlbum{
     [self.albumsArray removeAllObjects];
     [self fetchAlbums];
     [self.albumlistCollectionView reloadData];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - CollectionView Configuration
@@ -112,6 +136,7 @@
     //get album title from phassetcollection
     PHAssetCollection *collection = self.albumsArray[indexPath.row];
     cell.albumTitle.text = collection.localizedTitle;
+    cell.albumTitle.textColor = self.albumTitleColor;
     cell.albumCollection = collection;
     //get phasset for album cover image
     PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
@@ -141,7 +166,7 @@
             imageView.image = result;
             imageView.layer.cornerRadius = 5;
             imageView.layer.borderWidth = 1;
-            imageView.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.1].CGColor;
+            imageView.layer.borderColor = self.albumCellBorderColor;
         }];
     }
     return cell;
@@ -159,6 +184,8 @@
         imagePickerViewController.delegate = (id)self.callerController;
         //set mediatype
         imagePickerViewController.mediaTypeToUse = self.mediaTypeToUse;
+        //set theme
+        imagePickerViewController.theme = self.theme;
         //get images from album
         FTAlbumListCollectionViewCell *cell = sender;
         imagePickerViewController.albumName = cell.albumTitle.text;

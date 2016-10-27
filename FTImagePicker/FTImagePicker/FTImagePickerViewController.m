@@ -16,6 +16,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    //Default setting of select button is hidden
+    //In single selection mode, button doesn't appear
+    //In Multiple selection mode, appears when a user selects more than minimum select number.
+    self.selectBtn.hidden = YES;
     // Do any additional setup after loading the view.
     if(!self.allAssets){
         self.allAssets = [[NSMutableArray alloc] init];
@@ -40,7 +44,6 @@
     
     //set multiple selection mode
     self.FTimagePickerCollectionView.allowsMultipleSelection = self.multipleSelectOn;
-    self.selectBtn.hidden = !(self.multipleSelectOn);
     
     //fetch images when app start, doesn't fetch images when loaded from selected album
     if(self.allAssets.count == 0){
@@ -57,6 +60,10 @@
         PHAssetCollection *collection = obj;
         self.cameraRollLocalTitle = collection.localizedTitle;
     }];
+    
+    //set Theme of album list
+    [self changeTheme:self.theme];
+    
     //Notification center observer
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshImagePicker) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
@@ -67,6 +74,28 @@
 }
 - (BOOL)prefersStatusBarHidden{
     return YES;
+}
+
+#pragma mark - Theme
+- (void) changeTheme: (NSInteger) theme{
+    //white version
+    if(theme == 0){
+        self.FTimagePickerCollectionView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
+        self.FTDetailView.detailCollectionView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
+        self.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.92 alpha:0.7];
+        self.FTDetailView.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.92 alpha:0.7];
+        [self.view setTintColor:[UIColor colorWithWhite:0.25 alpha:1.0]];
+        [self.FTDetailView setTintColor:[UIColor colorWithWhite:0.25 alpha:1.0]];
+    }
+    //black version
+    else if(theme == 1){
+        self.FTimagePickerCollectionView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
+        self.FTDetailView.detailCollectionView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
+        self.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.08 alpha:0.7];
+        self.FTDetailView.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.08 alpha:0.7];
+        [self.view setTintColor:[UIColor colorWithWhite:0.65 alpha:1.0]];
+        [self.FTDetailView setTintColor:[UIColor colorWithWhite:0.65 alpha:1.0]];
+    }
 }
 
 #pragma mark - Refresh image picker
@@ -183,6 +212,10 @@
         NSLog(@"selected count %d", (int)self.selectedItemCount);
         //force collectionview in detailview to update selected cell layout
         [self.FTDetailView collectionView:self.FTDetailView.detailCollectionView didSelectItemAtIndexPath:indexPath];
+        //select button shows only when a user selects items more than the minimum number
+        if(self.selectedItemCount >= self.multipleSelectMin){
+            self.selectBtn.hidden = NO;
+        }
     }
 }
 
@@ -217,6 +250,10 @@
     NSLog(@"selected count %d", (int)self.selectedItemCount);
     //force collectionview in detailview to update deselected cell layout
     [self.FTDetailView collectionView:self.FTDetailView.detailCollectionView didDeselectItemAtIndexPath:indexPath];
+    //select button shows only when a user selects items more than the minimum number
+    if(self.selectedItemCount < self.multipleSelectMin){
+        self.selectBtn.hidden = YES;
+    }
 }
 
 #pragma mark - Selected and Deselected cells layout
@@ -294,7 +331,24 @@
     float cellWidth = floor((screenWidth-(self.cellScaleFactor-1))/self.cellScaleFactor);
     return CGSizeMake(cellWidth, cellWidth);
 }
+//
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
+//    float screenWidth = [UIScreen mainScreen].bounds.size.width;
+//    float cellWidth = floor((screenWidth-(self.cellScaleFactor-1))/self.cellScaleFactor);
+//    float headerSize = (screenWidth - (cellWidth*self.cellScaleFactor) - (self.cellScaleFactor -1))/2;
+//    NSLog(@"header Size %f", headerSize);
+//    NSLog(@"header Size %f, cell width %f, plus %f, screen width %f", headerSize, cellWidth, headerSize*2+cellWidth*self.cellScaleFactor+self.cellScaleFactor-1, screenWidth);
+//    return CGSizeMake(headerSize, 0);
+//}
+//
+//- (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section{
+//    float screenWidth = [UIScreen mainScreen].bounds.size.width;
+//    float cellWidth = floor((screenWidth-(self.cellScaleFactor-1))/self.cellScaleFactor);
+//    float footerSize = (screenWidth - (cellWidth*self.cellScaleFactor) - (self.cellScaleFactor -1))/2;
+//    return CGSizeMake(footerSize, self.buttonBarView.frame.size.height);
+//}
 
+#pragma mark - Cell layout update
 - (void) enforceCellToSelectUpdateLayout:(NSIndexPath *)indexPathForUpdatingCell{
     [self collectionView:self.FTimagePickerCollectionView didSelectItemAtIndexPath:indexPathForUpdatingCell];
 }

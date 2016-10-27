@@ -12,6 +12,9 @@
 @interface ViewController : UIViewController <FTImagePickerViewControllerDelegate>
 
 
+@property (weak, nonatomic) IBOutlet UISwitch *themeSwitch;
+@property (assign, nonatomic) NSInteger themeNumber;
+
 @property (weak, nonatomic) IBOutlet UIImageView *imageView1;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView2;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView3;
@@ -24,6 +27,7 @@
 @property (strong, nonatomic) NSMutableArray *selectedAssets;
 
 - (IBAction)OpenImagePicker:(UIControl *)sender;
+- (IBAction)themeChange:(UISwitch *)sender;
 
 
 @end

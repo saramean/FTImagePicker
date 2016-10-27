@@ -21,6 +21,8 @@
     if(!self.selectedAssets){
         self.selectedAssets = [[NSMutableArray alloc] init];
     }
+    self.themeSwitch.on = NO;
+    self.themeNumber = self.themeSwitch.on;
 }
 
 
@@ -31,7 +33,18 @@
 
 
 - (IBAction)OpenImagePicker:(UIControl *)sender {
-    [FTImagePickerManager presentFTImagePicker:self firstShowingController:FTImagePicker];
+    FTImagePickerOptions *imagePickerOptions = [[FTImagePickerOptions alloc] init];
+    imagePickerOptions.firstShowingController = FTImagePicker;
+    imagePickerOptions.multipleSelectOn = YES;
+    imagePickerOptions.multipleSelectMax = 9;
+    imagePickerOptions.multipleSelectMin = 3;
+    imagePickerOptions.regularAlbums = @[@2,@3,@4,@5,@6];
+    imagePickerOptions.theme = self.themeNumber;
+    [FTImagePickerManager presentFTImagePicker:self withOptions:imagePickerOptions];
+}
+
+- (IBAction)themeChange:(UISwitch *)sender {
+    self.themeNumber = self.themeSwitch.on;
 }
 
 - (void)getSelectedImageAssetsFromImagePicker:(NSMutableArray *)selectedAssetsArray{

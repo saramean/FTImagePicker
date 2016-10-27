@@ -276,7 +276,7 @@
         else{
             //Animation effect
             [UIView animateWithDuration:0.2 animations:^{
-                [self.imageViewForTransition setFrame:self.ImagePickerCollectionView.bounds];
+                [self.imageViewForTransition setFrame:self.bounds];
             } completion:^(BOOL finished) {
                 [self.imageViewForTransition removeFromSuperview];
                 //show cell in image picker after transition

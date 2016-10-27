@@ -75,6 +75,20 @@
                                         <frame key="frameInset" minX="70.00%" minY="10.71%" width="30.00%" height="17.17%"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                     </imageView>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0yJ-8G-W4M">
+                                        <frame key="frameInset" minY="98.28%" width="51" height="31" maxX="6"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <connections>
+                                            <action selector="themeChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="Vlc-2d-ccz"/>
+                                        </connections>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Theme" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VcS-p8-jvC">
+                                        <frame key="frameInset" minY="97.26%" width="54" height="21" maxX="65"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
@@ -91,6 +105,7 @@
                         <outlet property="imageView7" destination="urs-Dd-h1U" id="wxS-ww-Q2R"/>
                         <outlet property="imageView8" destination="wxe-Jd-qxv" id="vcI-1o-M5C"/>
                         <outlet property="imageView9" destination="koX-IF-atC" id="dX4-D6-i5V"/>
+                        <outlet property="themeSwitch" destination="0yJ-8G-W4M" id="Ylm-32-qaL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

@@ -9,13 +9,35 @@
 #import <Foundation/Foundation.h>
 #import "FTImagePicker.h"
 
+@interface FTImagePickerOptions ()
+@end
+@implementation FTImagePickerOptions
+
+- (id) init{
+    self = [super init];
+    if(self != nil){
+        self.firstShowingController = FTImagePicker;
+        self.multipleSelectOn = NO;
+        self.multipleSelectMax = 1;
+        self.multipleSelectMin = 1;
+        self.useCameraRoll = YES;
+        self.regularAlbums = @[@2, @3, @4, @5, @6, @100, @101];
+        self.smartAlbums = @[@200, @201, @202, @203, @204, @205, @206, @207, @208, @210, @211];
+        self.mediaTypeToUse = ImagesOnly;
+        self.theme = WhiteVersion;
+    }
+    return self;
+}
+
+@end
+
 @interface FTImagePickerManager ()
 
 @end
 
 @implementation FTImagePickerManager
 
-+ (void)presentFTImagePicker:(UIViewController *)viewController firstShowingController:(FTFirstShowingController)firstShowingController{
++ (void)presentFTImagePicker:(UIViewController *)viewController withOptions:(FTImagePickerOptions *)FTImagePickerOptions{
     if([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
         UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"FTImagePickerStoryBoard" bundle:nil];
         FTAlbumLIstViewController *albumListViewController = [storyBoard instantiateViewControllerWithIdentifier:@"FTAlbumLIstViewController"];
@@ -29,59 +51,30 @@
             FTImagePickerViewController.albumName =collection.localizedTitle;
         }];
         
-        //Another setting for AlbumList and ImagePicker here!!
         //setting For mutiple selection of image picker
-#pragma mark - Multiple Selection Option
-        FTImagePickerViewController.multipleSelectOn = YES;
-        FTImagePickerViewController.multipleSelectMin = 9;
-        FTImagePickerViewController.multipleSelectMax = 9;
+        FTImagePickerViewController.multipleSelectOn = FTImagePickerOptions.multipleSelectOn;
+        FTImagePickerViewController.multipleSelectMin = FTImagePickerOptions.multipleSelectMin;
+        FTImagePickerViewController.multipleSelectMax = FTImagePickerOptions.multipleSelectMax;
         FTImagePickerViewController.selectedItemCount = 0;
         albumListViewController.multipleSelectOn = FTImagePickerViewController.multipleSelectOn;
         albumListViewController.multipleSelectMax = FTImagePickerViewController.multipleSelectMax;
         albumListViewController.multipleSelectMin = FTImagePickerViewController.multipleSelectMin;
-        
-#pragma mark - Album Selection Option
-        //Setting which albums will be used in the app
-//        // PHAssetCollectionTypeAlbum regular subtypes
-//        PHAssetCollectionSubtypeAlbumRegular         = 2,
-//        PHAssetCollectionSubtypeAlbumSyncedEvent     = 3,
-//        PHAssetCollectionSubtypeAlbumSyncedFaces     = 4,
-//        PHAssetCollectionSubtypeAlbumSyncedAlbum     = 5,
-//        PHAssetCollectionSubtypeAlbumImported        = 6,
-//        
-//        // PHAssetCollectionTypeAlbum shared subtypes
-//        PHAssetCollectionSubtypeAlbumMyPhotoStream   = 100,
-//        PHAssetCollectionSubtypeAlbumCloudShared     = 101,  ICloud Shared
-//        
-//        // PHAssetCollectionTypeSmartAlbum subtypes
-//        PHAssetCollectionSubtypeSmartAlbumGeneric    = 200,
-//        PHAssetCollectionSubtypeSmartAlbumPanoramas  = 201,     Panoramas
-//        PHAssetCollectionSubtypeSmartAlbumVideos     = 202,     Videos
-//        PHAssetCollectionSubtypeSmartAlbumFavorites  = 203,     Favorites
-//        PHAssetCollectionSubtypeSmartAlbumTimelapses = 204,     Time-lapse
-//        PHAssetCollectionSubtypeSmartAlbumAllHidden  = 205,
-//        PHAssetCollectionSubtypeSmartAlbumRecentlyAdded = 206,  RecentlyAdded
-//        PHAssetCollectionSubtypeSmartAlbumBursts     = 207,     연사
-//        PHAssetCollectionSubtypeSmartAlbumSlomoVideos = 208,    Slo-mo
-//        PHAssetCollectionSubtypeSmartAlbumUserLibrary = 209,    Camer Roll
-//        PHAssetCollectionSubtypeSmartAlbumSelfPortraits PHOTOS_AVAILABLE_IOS_TVOS(9_0, 10_0) = 210,  Selfie
-//        PHAssetCollectionSubtypeSmartAlbumScreenshots PHOTOS_AVAILABLE_IOS_TVOS(9_0, 10_0) = 211,    Screenshots
-        
+        //Albums to use in albumlist
         //Camera Roll is added as a default album
+        albumListViewController.useCameraRoll = FTImagePickerOptions.useCameraRoll;
         //Add or Delete albums you want
-        albumListViewController.regularAlbums = @[@2, @3, @4, @5, @6, @100];
-        albumListViewController.smartAlbums = @[@200, @201, @202, @203, @204, @205, @206, @207, @208, @210, @211];
-#pragma mark - Media Type Option
-//            ImagesOnly = 1,
-//            VideosOnly = 2,
-//            ImagesAndVideos = 3,
-        albumListViewController.mediaTypeToUse = ImagesOnly;
+        albumListViewController.regularAlbums = FTImagePickerOptions.regularAlbums;
+        albumListViewController.smartAlbums = FTImagePickerOptions.smartAlbums;
+        //Media type to use
+        albumListViewController.mediaTypeToUse = FTImagePickerOptions.mediaTypeToUse;
         FTImagePickerViewController.mediaTypeToUse = albumListViewController.mediaTypeToUse;
-        
+        //Theme of image picker
+        albumListViewController.theme = FTImagePickerOptions.theme;
+        FTImagePickerViewController.theme = albumListViewController.theme;
         
         //make a stack for showing appropriate ViewController for purpose of the app.
         //show album list first
-        if(firstShowingController == FTAlbumList){
+        if(FTImagePickerOptions.firstShowingController == FTAlbumList){
             [navigationController setViewControllers:@[albumListViewController] animated:NO];
         }
         //show image picker first
@@ -91,11 +84,11 @@
         [viewController presentViewController:navigationController animated:YES completion:nil];
     }
     else{
-        [self managePhotoLibrarySetting:viewController firstShowingController:firstShowingController];
+        [self managePhotoLibrarySetting:viewController withOptions:FTImagePickerOptions];
     }
 }
 
-+ (void)managePhotoLibrarySetting:(UIViewController *)viewController firstShowingController:(FTFirstShowingController)firstShowingController{
++ (void)managePhotoLibrarySetting:(UIViewController *)viewController withOptions:(FTImagePickerOptions *)FTImagePickerOptions{
     
     PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
     
@@ -106,7 +99,7 @@
         [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
             if(status == PHAuthorizationStatusAuthorized){
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [self presentFTImagePicker:viewController firstShowingController:firstShowingController];
+                    [self presentFTImagePicker:viewController withOptions:FTImagePickerOptions];
                 });
             }
             else{
@@ -148,3 +141,5 @@
 }
 
 @end
+
+

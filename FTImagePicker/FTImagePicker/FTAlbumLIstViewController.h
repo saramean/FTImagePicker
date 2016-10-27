@@ -12,6 +12,7 @@
 
 @interface FTAlbumLIstViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 //multiple selection on boolean value for enabling multiple touch in the image picker
+@property (assign, nonatomic) BOOL useCameraRoll;
 @property (nonatomic) BOOL multipleSelectOn;
 @property (nonatomic) NSInteger multipleSelectMin;
 @property (nonatomic) NSInteger multipleSelectMax;
@@ -23,5 +24,8 @@
 @property (strong, nonatomic) NSMutableArray *albumsArray;
 @property (strong, nonatomic) __kindof UIViewController *callerController;
 @property (weak, nonatomic) IBOutlet UICollectionView *albumlistCollectionView;
+@property (assign, nonatomic) NSInteger theme;
+@property (strong, nonatomic) UIColor *albumTitleColor;
+@property (assign, nonatomic) CGColorRef albumCellBorderColor;
 
 @end

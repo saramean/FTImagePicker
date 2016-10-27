@@ -34,6 +34,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *selectBtn;
 @property (weak, nonatomic) id<FTImagePickerViewControllerDelegate> delegate;
 @property (strong, nonatomic) NSString *albumName;
+@property (assign, nonatomic) NSInteger theme;
+@property (weak, nonatomic) IBOutlet UIView *buttonBarView;
 
 
 - (IBAction)backToAlbumLeftEdgePan:(UIScreenEdgePanGestureRecognizer *)sender;
