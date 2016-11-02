@@ -359,8 +359,8 @@
 
 #pragma mark - Back To application from picker
 - (void) didFinishSelectPhotosFromImagePicker{
-    [self.delegate getSelectedImageAssetsFromImagePicker:self.selectedItemsArray];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    [self.delegate getSelectedImageAssetsFromImagePicker:self.selectedItemsArray];
 }
 
 - (IBAction)multiSelectConfirmedSelectBtnClicked:(id)sender {
