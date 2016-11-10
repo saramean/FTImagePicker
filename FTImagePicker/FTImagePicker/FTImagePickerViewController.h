@@ -13,6 +13,7 @@
 @protocol FTImagePickerViewControllerDelegate <NSObject>
 
 - (void) getSelectedImageAssetsFromImagePicker: (NSMutableArray *) selectedAssetsArray;
+- (void) imagePickerCanceledWithOutSelection;
 
 @end
 

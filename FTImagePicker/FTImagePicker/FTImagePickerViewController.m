@@ -383,6 +383,7 @@
 }
 
 - (IBAction)cancelImagePickerBtnClicked:(UIButton *)sender {
+    [self.delegate imagePickerCanceledWithOutSelection];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 

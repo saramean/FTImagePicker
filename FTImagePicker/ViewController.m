@@ -69,4 +69,8 @@
         }];
     }
 }
+
+- (void)imagePickerCanceledWithOutSelection{
+    NSLog(@"picker canceled");
+}
 @end
