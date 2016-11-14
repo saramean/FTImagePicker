@@ -223,7 +223,7 @@
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h4j-dp-bmF">
-                                                        <rect key="frame" x="0.0" y="-1" width="750" height="1333"/>
+                                                        <rect key="frame" x="0.0" y="-1" width="1125" height="1999"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <gestureRecognizers/>
                                                     </imageView>
@@ -263,6 +263,14 @@
                                         <action selector="selectBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="Lbm-fr-AQz"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9q1-k8-6zx">
+                                    <frame key="frameInset" minX="50.00%" minY="50.00%" width="45" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Delete"/>
+                                    <connections>
+                                        <action selector="deleteBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="B0U-1H-O0S"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
                         </view>
@@ -270,6 +278,7 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <connections>
                         <outlet property="buttonBarView" destination="Kkj-jB-hpK" id="rmx-Ts-Joj"/>
+                        <outlet property="deleteBtn" destination="9q1-k8-6zx" id="YKJ-zH-TvO"/>
                         <outlet property="detailCollectionView" destination="io9-gH-8aC" id="BRE-AP-7EG"/>
                         <outlet property="selectBtn" destination="Tqw-gY-QKe" id="8Mi-cY-LHF"/>
                     </connections>

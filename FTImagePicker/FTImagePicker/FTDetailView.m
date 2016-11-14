@@ -70,10 +70,12 @@
 //make sure add correct item by select button
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView{
     self.selectBtn.enabled = NO;
+    self.deleteBtn.enabled = NO;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
     self.selectBtn.enabled = YES;
+    self.deleteBtn.enabled = YES;
 }
 
 //scroll view delegate
@@ -322,7 +324,7 @@
 }
 
 
-#pragma mark - select button clicked
+#pragma mark - Select button clicked
 - (IBAction)selectBtnClicked:(UIButton *)sender {
     //single selection mode
     if(!self.multipleSelectOn){
@@ -374,6 +376,23 @@
             NSLog(@"selected count %d", (int)self.selectedItemCount);
         }
     }
+}
+
+#pragma mark - Delete Button Clicked
+- (IBAction)deleteBtnClicked:(UIButton *)sender {
+    NSArray<NSIndexPath *> *itemToBeDeleted = [NSArray arrayWithArray:[self.detailCollectionView indexPathsForVisibleItems]];
+    PHAsset *assetWillbeDeleted = self.allAssets[itemToBeDeleted[0].row];
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        [PHAssetChangeRequest deleteAssets:@[assetWillbeDeleted]];
+    } completionHandler:^(BOOL success, NSError * _Nullable error) {
+        if(success){
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.allAssets removeObjectAtIndex:(int) itemToBeDeleted[0].row];
+                [self.ImagePickerCollectionView reloadData];
+                [self.detailCollectionView reloadData];
+            });
+        }
+    }];
 }
 
 #pragma mark - Selected and Deselected cells layout

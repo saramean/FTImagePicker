@@ -32,6 +32,7 @@
 @property (strong, nonatomic) UICollectionView *ImagePickerCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *detailCollectionView;
 @property (weak, nonatomic) IBOutlet UIButton *selectBtn;
+@property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
 @property (strong, nonatomic) UIImageView *imageViewForTransition;
 @property (strong, nonatomic) AVPlayerViewController *videoPlayerViewController;
 @property (weak, nonatomic) id<FTDetailViewDelegate> delegate;
@@ -41,5 +42,6 @@
 - (IBAction)dismissViewDownPan:(UIPanGestureRecognizer *)sender;
 - (IBAction)dismissViewBtnClicked:(UIButton *)sender;
 - (IBAction)selectBtnClicked:(UIButton *)sender;
+- (IBAction)deleteBtnClicked:(id)sender;
 
 @end
