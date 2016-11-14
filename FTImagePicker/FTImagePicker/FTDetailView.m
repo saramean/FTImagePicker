@@ -96,6 +96,7 @@
     
 }
 
+#pragma mark Scroll View Zoom Reset
 - (void) scrollViewZoomReset:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
     if(self.currentShowingCellsIndexPath != [self getCurrentShowingCellsIndexPath:scrollView withVelocity:velocity targetContentOffset:targetContentOffset]){
         FTDetailViewCollectionViewCell *previousCell = (__kindof UICollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:self.currentShowingCellsIndexPath];
@@ -131,11 +132,6 @@
     return indexPathForCell;
 }
 
-- (void) moveImagePickersScrollToCurrentShowingItem: (UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
-    NSIndexPath *indexPathForCurrentCell = [self getCurrentShowingCellsIndexPath:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
-    [self.ImagePickerCollectionView scrollToItemAtIndexPath:indexPathForCurrentCell atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
-}
-
 - (__kindof UICollectionViewCell *) getCurrentShowingCell:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
     NSArray *visibleItem = [NSArray arrayWithArray:[self.detailCollectionView indexPathsForVisibleItems]];
     FTDetailViewCollectionViewCell *detailViewCell;
@@ -165,15 +161,10 @@
     return detailViewCell;
 }
 
-//Check focused item is selected item or not
-- (void) selectBtnConfigure:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *) targetContentOffset{
-    FTDetailViewCollectionViewCell *detailViewCell = [self getCurrentShowingCell:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
-    if(detailViewCell.selected){
-        [self.selectBtn setTitle:@"Deselect" forState:UIControlStateNormal];
-    }
-    else{
-        [self.selectBtn setTitle:@"Select" forState:UIControlStateNormal];
-    }
+#pragma mark - Scroll Caller CollectionView
+- (void) moveImagePickersScrollToCurrentShowingItem: (UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
+    NSIndexPath *indexPathForCurrentCell = [self getCurrentShowingCellsIndexPath:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    [self.ImagePickerCollectionView scrollToItemAtIndexPath:indexPathForCurrentCell atScrollPosition:UICollectionViewScrollPositionCenteredVertically animated:NO];
 }
 
 #pragma mark - Collection View Configuring
@@ -316,6 +307,18 @@
         //show cell in image picker after transition
         [selectedCellInImagePicker.contentView setAlpha:1.0];
     }];
+}
+
+#pragma mark - Configure Select Button
+//Check focused item is selected item or not
+- (void) selectBtnConfigure:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *) targetContentOffset{
+    FTDetailViewCollectionViewCell *detailViewCell = [self getCurrentShowingCell:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    if(detailViewCell.selected){
+        [self.selectBtn setTitle:@"Deselect" forState:UIControlStateNormal];
+    }
+    else{
+        [self.selectBtn setTitle:@"Select" forState:UIControlStateNormal];
+    }
 }
 
 

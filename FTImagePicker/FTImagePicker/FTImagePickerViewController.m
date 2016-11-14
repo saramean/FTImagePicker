@@ -72,6 +72,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+#pragma mark - Status Bar Hidden
 - (BOOL)prefersStatusBarHidden{
     return YES;
 }
@@ -269,24 +270,6 @@
     deselectedCell.alpha = 1.0;
 }
 
-#pragma mark - Communication With Detail View
-//single selection mode select item in detail view delegate
-- (void) singleSelectionModeSelectionConfirmed:(NSMutableArray *)selectedAssetArray{
-    PHAsset *selectedAsset = [selectedAssetArray firstObject];
-    [self.selectedItemsArray addObject:selectedAsset];
-    [self didFinishSelectPhotosFromImagePicker];
-}
-
-//delegate for showing alertController from detailview
-- (void) presentAlertController:(UIAlertController *)alertController{
-    [self presentViewController:alertController animated:YES completion:nil];
-}
-
-//delegate for playing videos
-- (void) presentAVPlayerViewController:(AVPlayerViewController *)AVPlayerViewController AVPlayer:(AVPlayer *)AVPlayer{
-    [self presentViewController:AVPlayerViewController animated:NO completion:nil];
-    [AVPlayer play];
-}
 #pragma mark - Configuring Collection View
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
     return 1;
@@ -355,6 +338,26 @@
 
 - (void) enforceCellToDeselectAndUpdateLayout:(NSIndexPath *)indexPathForUpdatingCell{
     [self collectionView:self.FTimagePickerCollectionView didDeselectItemAtIndexPath:indexPathForUpdatingCell];
+}
+
+
+#pragma mark - Communication With Detail View
+//single selection mode select item in detail view delegate
+- (void) singleSelectionModeSelectionConfirmed:(NSMutableArray *)selectedAssetArray{
+    PHAsset *selectedAsset = [selectedAssetArray firstObject];
+    [self.selectedItemsArray addObject:selectedAsset];
+    [self didFinishSelectPhotosFromImagePicker];
+}
+
+//delegate for showing alertController from detailview
+- (void) presentAlertController:(UIAlertController *)alertController{
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+//delegate for playing videos
+- (void) presentAVPlayerViewController:(AVPlayerViewController *)AVPlayerViewController AVPlayer:(AVPlayer *)AVPlayer{
+    [self presentViewController:AVPlayerViewController animated:NO completion:nil];
+    [AVPlayer play];
 }
 
 #pragma mark - Back To application from picker

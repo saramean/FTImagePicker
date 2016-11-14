@@ -37,6 +37,7 @@
 
 @implementation FTImagePickerManager
 
+#pragma mark - present Image Picker
 + (void)presentFTImagePicker:(UIViewController *)viewController withOptions:(FTImagePickerOptions *)FTImagePickerOptions{
     if([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
         UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"FTImagePickerStoryBoard" bundle:nil];
@@ -88,6 +89,8 @@
     }
 }
 
+
+#pragma mark - Get PhotoLibrary Authorization from User
 + (void)managePhotoLibrarySetting:(UIViewController *)viewController withOptions:(FTImagePickerOptions *)FTImagePickerOptions{
     
     PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
