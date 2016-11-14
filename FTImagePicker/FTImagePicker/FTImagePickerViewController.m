@@ -20,6 +20,7 @@
     //In single selection mode, button doesn't appear
     //In Multiple selection mode, appears when a user selects more than minimum select number.
     self.selectBtn.hidden = YES;
+    self.deleteBtn.hidden = YES;
     // Do any additional setup after loading the view.
     if(!self.allAssets){
         self.allAssets = [[NSMutableArray alloc] init];
@@ -217,6 +218,11 @@
         if(self.selectedItemCount >= self.multipleSelectMin){
             self.selectBtn.hidden = NO;
         }
+        //delete button shows when at least one asset chosen.
+        if(self.selectedItemCount > 0 && !self.syncedAlbum){
+            self.deleteBtn.hidden = NO;
+            self.albumBtn.hidden = YES;
+        }
     }
 }
 
@@ -254,6 +260,10 @@
     //select button shows only when a user selects items more than the minimum number
     if(self.selectedItemCount < self.multipleSelectMin){
         self.selectBtn.hidden = YES;
+    }
+    if(self.selectedItemCount < 1 && !self.syncedAlbum){
+        self.deleteBtn.hidden = YES;
+        self.albumBtn.hidden = NO;
     }
 }
 
@@ -388,6 +398,36 @@
 - (IBAction)cancelImagePickerBtnClicked:(UIButton *)sender {
     [self.delegate imagePickerCanceledWithOutSelection];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Delete Assets
+- (IBAction)deleteAssetsBtnClicked:(id)sender {
+    NSMutableArray *assetsWillBeDeleted = [[NSMutableArray alloc] init];
+    NSMutableIndexSet *assetIndexSetWillBeDeleted = [[NSMutableIndexSet alloc] init];
+    for(NSIndexPath *indexPath in self.selectedItemsArray){
+        [assetsWillBeDeleted addObject:self.allAssets[indexPath.row]];
+        [assetIndexSetWillBeDeleted addIndex:indexPath.row];
+    }
+    
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        [PHAssetChangeRequest deleteAssets:assetsWillBeDeleted];
+    } completionHandler:^(BOOL success, NSError * _Nullable error) {
+        if(success){
+            NSLog(@"assets are deleted");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.allAssets removeObjectsAtIndexes:assetIndexSetWillBeDeleted];
+                [self.selectedItemsArray removeAllObjects];
+                self.selectedItemCount = 0;
+                [self.FTimagePickerCollectionView reloadData];
+                [self.FTDetailView.detailCollectionView reloadData];
+                self.albumBtn.hidden = NO;
+                self.deleteBtn.hidden = YES;
+            });
+        }
+        else{
+            NSLog(@"error ""%@""", error);
+        }
+    }];
 }
 
 #pragma mark - Navigation Controll

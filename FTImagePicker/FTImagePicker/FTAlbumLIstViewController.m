@@ -197,6 +197,9 @@
         else{
             albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType != %d", self.mediaTypeToUse];
         }
+        if(cell.albumCollection.assetCollectionSubtype == PHAssetCollectionSubtypeAlbumSyncedAlbum){
+            imagePickerViewController.syncedAlbum = YES;
+        }
         PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetsInAssetCollection:cell.albumCollection options:albumsFetchingOptions];
         NSMutableArray *assetForAlbum = [[NSMutableArray alloc] init];
         [assetResultForAlbum enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {

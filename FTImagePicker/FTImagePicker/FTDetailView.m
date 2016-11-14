@@ -57,6 +57,14 @@
             [playButton addTarget:self action:@selector(playVideosButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
             [cell addSubview:playButton];
         }
+        //Hide delete button when the asset if synced from itunes
+        //Because asset synced from itunes cannot be deleted in IPhone
+        if(assetForIndexPath.sourceType == PHAssetSourceTypeiTunesSynced){
+            self.deleteBtn.hidden = YES;
+        }
+        else{
+            self.deleteBtn.hidden = NO;
+        }
     }];
     if(cell.selected){
         [self selectedCellLayoutChange:cell];
@@ -391,6 +399,9 @@
                 [self.ImagePickerCollectionView reloadData];
                 [self.detailCollectionView reloadData];
             });
+        }
+        else{
+            NSLog(@"Error %@", error.localizedDescription);
         }
     }];
 }

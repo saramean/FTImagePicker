@@ -31,12 +31,14 @@
 @property (nonatomic) NSInteger mediaTypeToUse;
 @property (nonatomic) NSString *cameraRollLocalTitle;
 @property (strong, nonatomic) NSMutableArray *selectedItemsArray;
-@property (strong, nonatomic) NSMutableDictionary *selectedItemsDictionary;
 @property (weak, nonatomic) IBOutlet UIButton *selectBtn;
 @property (weak, nonatomic) id<FTImagePickerViewControllerDelegate> delegate;
 @property (strong, nonatomic) NSString *albumName;
 @property (assign, nonatomic) NSInteger theme;
 @property (weak, nonatomic) IBOutlet UIView *buttonBarView;
+@property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
+@property (weak, nonatomic) IBOutlet UIButton *albumBtn;
+@property (assign, nonatomic) BOOL syncedAlbum;
 
 
 - (IBAction)backToAlbumLeftEdgePan:(UIScreenEdgePanGestureRecognizer *)sender;
@@ -45,6 +47,7 @@
 - (IBAction)cellZoomInOutPinch:(UIPinchGestureRecognizer *)sender;
 - (IBAction)cancelImagePickerBtnClicked:(UIButton *)sender;
 - (IBAction)multiSelectConfirmedSelectBtnClicked:(id)sender;
+- (IBAction)deleteAssetsBtnClicked:(id)sender;
 
 
 @end

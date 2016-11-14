@@ -38,7 +38,7 @@
     imagePickerOptions.multipleSelectOn = YES;
     imagePickerOptions.multipleSelectMax = 9;
     imagePickerOptions.multipleSelectMin = 3;
-    imagePickerOptions.regularAlbums = @[@2,@3,@4,@5,@6];
+    imagePickerOptions.regularAlbums = @[@2,@3,@4, @5,@6];
     imagePickerOptions.theme = self.themeNumber;
     [FTImagePickerManager presentFTImagePicker:self withOptions:imagePickerOptions];
 }
