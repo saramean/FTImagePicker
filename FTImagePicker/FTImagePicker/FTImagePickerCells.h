@@ -35,7 +35,7 @@
 @end
 
 @interface FTDetailViewCollectionViewCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet UIImageView *detailImageView;
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollViewForZoom;
+@property (strong, nonatomic) IBOutlet UIImageView *detailImageView;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollViewForZoom;
 
 @end

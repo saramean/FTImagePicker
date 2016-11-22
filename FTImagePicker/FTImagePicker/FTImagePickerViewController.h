@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FTDetailView.h"
+#import "FTDetailViewController.h"
 #import "FTImagePickerCells.h"
+@class ShowDetailViewControllerAnimation;
 
 @protocol FTImagePickerViewControllerDelegate <NSObject>
 
@@ -18,10 +19,10 @@
 @end
 
 
-@interface FTImagePickerViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FTDetailViewDelegate, cellSelectionLayoutChange>
+@interface FTImagePickerViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FTDetailViewControllerDelegate, cellSelectionLayoutChange, UIViewControllerTransitioningDelegate>
 @property (strong, nonatomic) NSMutableArray *allAssets;
 @property (weak, nonatomic) IBOutlet UICollectionView *FTimagePickerCollectionView;
-@property (strong, nonatomic) IBOutlet FTDetailView *FTDetailView;
+@property (strong, nonatomic) FTDetailViewController *FTDetailViewController;
 @property (nonatomic) CGFloat scaleCriteria;
 @property (nonatomic) NSInteger cellScaleFactor;
 @property (nonatomic) BOOL multipleSelectOn;
@@ -39,6 +40,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
 @property (weak, nonatomic) IBOutlet UIButton *albumBtn;
 @property (assign, nonatomic) BOOL syncedAlbum;
+@property (strong, nonatomic) ShowDetailViewControllerAnimation *showDetailViewAnimation;
 
 
 - (IBAction)backToAlbumLeftEdgePan:(UIScreenEdgePanGestureRecognizer *)sender;
@@ -48,6 +50,9 @@
 - (IBAction)cancelImagePickerBtnClicked:(UIButton *)sender;
 - (IBAction)multiSelectConfirmedSelectBtnClicked:(id)sender;
 - (IBAction)deleteAssetsBtnClicked:(id)sender;
+@end
 
-
+@interface ShowDetailViewControllerAnimation : NSObject<UIViewControllerAnimatedTransitioning>
+@property (strong, nonatomic) UIImageView *imageViewForTransition;
+@property (strong, nonatomic) UIView *hidingCellView;
 @end

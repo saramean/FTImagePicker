@@ -1,14 +1,58 @@
 //
-//  FTDetailView.m
+//  FTDetailViewController.m
 //  FTImagePicker
 //
-//  Created by Park on 2016. 10. 20..
+//  Created by Park on 2016. 11. 18..
 //  Copyright © 2016년 Parkfantagram /inc. All rights reserved.
 //
 
-#import "FTDetailView.h"
+#import "FTDetailViewController.h"
 
-@implementation FTDetailView
+@interface FTDetailViewController ()
+
+@end
+
+@implementation FTDetailViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    self.view.backgroundColor = [UIColor clearColor];
+    self.dismissAnimation = [[DismissDetailViewControllerAnimation alloc] init];
+    
+    NSLog(@"curent indexpath %@", self.currentShowingCellsIndexPath);
+    [self.detailCollectionView scrollToItemAtIndexPath:self.currentShowingCellsIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+    
+    //set Theme of album list
+    [self changeTheme:self.theme];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (BOOL)prefersStatusBarHidden{
+    return YES;
+}
+
+#pragma mark - Theme
+- (void) changeTheme: (NSInteger) theme{
+    //white version
+    if(theme == 0){
+        //self.view.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
+        self.detailCollectionView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
+        self.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.92 alpha:0.7];
+        [self.view setTintColor:[UIColor colorWithWhite:0.25 alpha:1.0]];
+    }
+    //black version
+    else if(theme == 1){
+        //self.view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
+        self.detailCollectionView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
+        self.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.08 alpha:0.7];
+        [self.view setTintColor:[UIColor colorWithWhite:0.65 alpha:1.0]];
+    }
+}
 
 #pragma mark - Item Selection
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
@@ -41,17 +85,17 @@
     PHAsset *assetForIndexPath = self.allAssets[indexPath.row];
     [[PHImageManager defaultManager] requestImageForAsset:assetForIndexPath targetSize:CGSizeMake(cell.bounds.size.width*3, cell.bounds.size.height*2)  contentMode:PHImageContentModeAspectFit options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
         //set image
-        [cell.detailImageView setFrame:self.frame];
         cell.detailImageView.image = result;
         //configure scroll view
         cell.scrollViewForZoom.maximumZoomScale = 3.0;
         cell.scrollViewForZoom.minimumZoomScale = 1.0;
         cell.scrollViewForZoom.delegate = self;
         cell.scrollViewForZoom.zoomScale = 1.0;
+        cell.scrollViewForZoom.contentSize = cell.bounds.size;
         //if asset is Video type
         if(assetForIndexPath.mediaType == PHAssetMediaTypeVideo){
             //add Button to show its video asset
-            UIButton *playButton = [[UIButton alloc] initWithFrame:CGRectMake(self.bounds.size.width/2-20, self.bounds.size.height/2 - 15, 40, 30)];
+            UIButton *playButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2-20, self.view.bounds.size.height/2 - 15, 40, 30)];
             [playButton setTitle:@"Play" forState:UIControlStateNormal];
             playButton.tintColor = [UIColor whiteColor];
             [playButton addTarget:self action:@selector(playVideosButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -98,15 +142,15 @@
 
 //did delegate is used to get current showing cell's information by scroll
 - (void) scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
-    NSLog(@"scroll view content offset x: %f, y: %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
-    NSLog(@"scoll view targetConetnOffset x: %f, y: %f", targetContentOffset->x, targetContentOffset->y);
+    //NSLog(@"scroll view content offset x: %f, y: %f", scrollView.contentOffset.x, scrollView.contentOffset.y);
+    //NSLog(@"scoll view targetConetnOffset x: %f, y: %f", targetContentOffset->x, targetContentOffset->y);
     [self selectBtnConfigure:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     [self moveImagePickersScrollToCurrentShowingItem:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     [self scrollViewZoomReset:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
     
 }
 
-#pragma mark Scroll View Zoom Reset
+#pragma mark - Scroll View Zoom Reset
 - (void) scrollViewZoomReset:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset{
     if(self.currentShowingCellsIndexPath != [self getCurrentShowingCellsIndexPath:scrollView withVelocity:velocity targetContentOffset:targetContentOffset]){
         FTDetailViewCollectionViewCell *previousCell = (__kindof UICollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:self.currentShowingCellsIndexPath];
@@ -179,7 +223,7 @@
 
 #pragma mark - Collection View Configuring
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return self.bounds.size;
+    return self.view.bounds.size;
 }
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -195,10 +239,10 @@
 //if movement toward y direction is larger than direction toward x, gesture recognizer begins
 //else, collection view's normal pan handle its scroll
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
-    CGPoint location = [gestureRecognizer locationInView:self];
+    CGPoint location = [gestureRecognizer locationInView:self.view];
     if([gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]){
-        //For preventing dismiss video player when video player control bar slider controled
-        if(location.y > self.frame.size.height - 100){
+        //For preventing dismiss video player when video player control bar slider controlled
+        if(location.y > self.view.frame.size.height - 100){
             return NO;
         }
         else{
@@ -221,12 +265,12 @@
 }
 
 #pragma mark - Dismiss View
-- (IBAction)dismissViewDownPan:(UIPanGestureRecognizer *)sender {
+- (IBAction)dismissViewControllerDownPan:(UIPanGestureRecognizer *)sender {
     CGPoint translation = [sender translationInView:self.detailCollectionView];
-    CGPoint location = [sender locationInView:self];
+    CGPoint location = [sender locationInView:self.view];
     if(sender.state == UIGestureRecognizerStateBegan){
         //make a imageView For transition and configure
-        self.imageViewForTransition = [[UIImageView alloc] initWithFrame:self.bounds];
+        self.imageViewForTransition = [[UIImageView alloc] initWithFrame:self.view.bounds];
         self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
         self.imageViewForTransition.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.0];
         //selected cell for get image from it
@@ -240,10 +284,9 @@
         //hide image view in detail collection view
         [selectedCell.detailImageView setAlpha:0.0];
         //add imageView as subview of Image Picker collection view
-        [self addSubview:self.imageViewForTransition];
+        [self.view addSubview:self.imageViewForTransition];
     }
     else if(sender.state == UIGestureRecognizerStateChanged){
-        self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0 - translation.y*0.003];
         [self.detailCollectionView setAlpha:1.0 -translation.y*0.003];
         self.imageViewForTransition.center = location;
     }
@@ -260,15 +303,12 @@
                 NSLog(@"converted frame x:%f, y:%f", convertedRect.origin.x, convertedRect.origin.y);
                 [self.imageViewForTransition setFrame:convertedRect];
                 NSLog(@"cell frame x:%f, y:%f", selectedCellInImagePicker.frame.origin.x, selectedCellInImagePicker.frame.origin.y);
+                [self.detailCollectionView setAlpha:0.0];
             } completion:^(BOOL finished) {
-                self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
+                [self dismissViewControllerAnimated:NO completion:nil];
                 [self.imageViewForTransition removeFromSuperview];
-                [self removeFromSuperview];
                 //show cell in image picker after transition
                 [selectedCellInImagePicker.contentView setAlpha:1.0];
-                //restore background coler of detail view and collection view
-                self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
-                [self.detailCollectionView setAlpha:1.0];
                 //restore image view in detail collection view
                 [selectedCell.detailImageView setAlpha:1.0];
             }];
@@ -277,13 +317,11 @@
         else{
             //Animation effect
             [UIView animateWithDuration:0.2 animations:^{
-                [self.imageViewForTransition setFrame:self.bounds];
+                [self.imageViewForTransition setFrame:self.view.bounds];
             } completion:^(BOOL finished) {
                 [self.imageViewForTransition removeFromSuperview];
                 //show cell in image picker after transition
                 [selectedCellInImagePicker.contentView setAlpha:1.0];
-                //restore background coler of detail view and collection view
-                self.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
                 [self.detailCollectionView setAlpha:1.0];
                 //restore image view in detail collection view
                 [selectedCell.detailImageView setAlpha:1.0];
@@ -292,32 +330,41 @@
     }
 }
 
-- (IBAction)dismissViewBtnClicked:(UIButton *)sender {
+- (IBAction)dismissViewControllerBtnClicked:(UIButton *)sender {
+    //current cell's indexpath in detail view controller
+    NSIndexPath *indexPath = [[self.detailCollectionView indexPathsForVisibleItems] firstObject];
     //make a imageView For transition and configure
-    UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:self.ImagePickerCollectionView.bounds];
+    UIImageView *imageViewForTransition = [[UIImageView alloc] init];
     imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
     //selected cell for get image from it
-    FTDetailViewCollectionViewCell *selectedCell = (FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
+    FTDetailViewCollectionViewCell *selectedCell = (FTDetailViewCollectionViewCell *) [self.detailCollectionView cellForItemAtIndexPath:indexPath];
     //assign image to imageview
     imageViewForTransition.image = selectedCell.detailImageView.image;
-    //add imageView as subview of Image Picker collection view
-    [self.ImagePickerCollectionView addSubview:imageViewForTransition];
+    //assign imageview to transition
+    self.dismissAnimation.imageViewForTransition = imageViewForTransition;
     //Image picker cell for destination point of transition
-    FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:[[self.detailCollectionView indexPathsForVisibleItems] firstObject]];
-    //hide image in image picker for effect
-    [selectedCellInImagePicker.contentView setAlpha:0.0];
-    //Animation effect
-    [UIView animateWithDuration:0.2 animations:^{
-        [imageViewForTransition setFrame:selectedCellInImagePicker.frame];
-        [self setAlpha:0.0];
-    } completion:^(BOOL finished) {
-        imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
-        [imageViewForTransition removeFromSuperview];
-        [self removeFromSuperview];
-        //show cell in image picker after transition
-        [selectedCellInImagePicker.contentView setAlpha:1.0];
-    }];
+    FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:indexPath];
+    //convert frame according to super view of iamgepicker
+    if(!selectedCellInImagePicker){
+        selectedCellInImagePicker = [self.ImagePickerCollectionView dequeueReusableCellWithReuseIdentifier:@"imagePickerCells" forIndexPath:indexPath];
+    }
+    CGRect converted = [self.ImagePickerCollectionView convertRect:selectedCellInImagePicker.frame toView:self.ImagePickerCollectionView.superview];
+    //hide image in image destination cell
+    UIView *hidingCellView = [[UIView alloc] initWithFrame:converted];
+    hidingCellView.backgroundColor = self.detailCollectionView.backgroundColor;
+    self.dismissAnimation.hidingCellView = hidingCellView;
+    self.dismissAnimation.finalFrame = converted;
+    self.dismissAnimation.cellDismissing = selectedCell;
+    self.transitioningDelegate = self;
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+#pragma mark - Transitioning Delegate
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed{
+    return self.dismissAnimation;
+}
+
 
 #pragma mark - Configure Select Button
 //Check focused item is selected item or not
@@ -365,7 +412,7 @@
                 UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Maximum Selection" message:[NSString stringWithFormat:@"You can choose up to %d images.", (int)self.multipleSelectMax] preferredStyle:UIAlertControllerStyleAlert];
                 UIAlertAction *OKAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
                 [alertController addAction:OKAction];
-                [self.delegate presentAlertController:alertController];
+                [self presentViewController:alertController animated:YES completion:nil];
             }
         }
         else{
@@ -375,11 +422,11 @@
             [sender setTitle:@"Select" forState:UIControlStateNormal];
             [self deselectedCellLayoutChange:detailViewCell];
             //removeObject Action occurs in delegate(enforceCellToDeselectAndUpdateLayout)
-//            for(int i = 0; i < self.selectedItemsArray.count; i++){
-//                if(self.selectedItemsArray[i] == itemToBeSelectedOrDeselected[0]){
-//                    [self.selectedItemsArray removeObjectAtIndex:i];
-//                }
-//            }
+            //            for(int i = 0; i < self.selectedItemsArray.count; i++){
+            //                if(self.selectedItemsArray[i] == itemToBeSelectedOrDeselected[0]){
+            //                    [self.selectedItemsArray removeObjectAtIndex:i];
+            //                }
+            //            }
             self.selectedItemCount -= 1;
             NSLog(@"selected count %d", (int)self.selectedItemCount);
         }
@@ -430,27 +477,49 @@
             AVPlayerItem *playItem = [AVPlayerItem playerItemWithAsset: asset];
             AVPlayer *videoPlayer = [[AVPlayer alloc] initWithPlayerItem:playItem];
             self.videoPlayerViewController.player = videoPlayer;
-            [self.videoPlayerViewController.view setFrame:self.bounds];
+            [self.videoPlayerViewController.view setFrame:self.view.bounds];
             self.videoPlayerViewController.showsPlaybackControls = YES;
-//            //Button For Back To Detail View
-//            UIButton *backToDetailViewBtn = [[UIButton alloc] initWithFrame:CGRectMake(18, 60, 44, 30)];
-//            [backToDetailViewBtn setTitle:@"Back" forState:UIControlStateNormal];
-//            [backToDetailViewBtn addTarget:self action:@selector(dismissVideoPlayer:) forControlEvents:UIControlEventTouchUpInside];
-//            [self.videoPlayerViewController.view addSubview:backToDetailViewBtn];
-//            //Edge Pan Gesture for same job with back button
-//            UIScreenEdgePanGestureRecognizer *edgePanGesture = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(dismissVideoPlayer:)];
-//            edgePanGesture.edges = UIRectEdgeLeft;
-//            edgePanGesture.delegate = self;
-//            [self.videoPlayerViewController.view addGestureRecognizer:edgePanGesture];
-            [self.delegate presentAVPlayerViewController:self.videoPlayerViewController AVPlayer:videoPlayer];
-//            [self addSubview:self.videoPlayerViewController.view];
-//            [videoPlayer play];
+            [self presentViewController:self.videoPlayerViewController animated:NO completion:nil];
+            [videoPlayer play];
         });
     }];
 }
-//
-//- (void) dismissVideoPlayer:(id) sender {
-//    [self.videoPlayerViewController.view removeFromSuperview];
-//}
+
+
+@end
+
+#pragma mark - Transition Animation
+@implementation DismissDetailViewControllerAnimation
+
+- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext{
+    return 0.2;
+}
+
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext{
+    UIView *fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
+    UIView *containerView = [transitionContext containerView];
+    UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
+    
+    self.imageViewForTransition.frame = containerView.frame;
+    
+    self.cellDismissing.detailImageView.hidden = YES;
+    toView.hidden = NO;
+    [containerView insertSubview:toView belowSubview:fromView];
+    [containerView addSubview:self.hidingCellView];
+    [containerView addSubview:self.imageViewForTransition];
+    
+    NSTimeInterval duration = [self transitionDuration:transitionContext];
+    
+    [UIView animateWithDuration:duration animations:^{
+        [self.imageViewForTransition setFrame:self.finalFrame];
+        [fromView setAlpha:0.0];
+    } completion:^(BOOL finished) {
+        [self.imageViewForTransition removeFromSuperview];
+        [self.hidingCellView removeFromSuperview];
+        [fromView setAlpha:1.0];
+        self.cellDismissing.detailImageView.hidden = NO;
+        [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+    }];
+}
 
 @end

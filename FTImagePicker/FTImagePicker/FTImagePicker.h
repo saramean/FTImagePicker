@@ -13,7 +13,7 @@
 #endif /* FTImagePicker_h */
 #import "FTAlbumListViewController.h"
 #import "FTImagePickerViewController.h"
-#import "FTDetailView.h"
+#import "FTDetailViewController.h"
 
 typedef NS_ENUM(NSInteger, FTFirstShowingController) {
     FTAlbumList = 1,

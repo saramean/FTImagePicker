@@ -28,16 +28,19 @@
     if(!self.selectedItemsArray){
         self.selectedItemsArray = [[NSMutableArray alloc] init];
     }
-    //Configure FTDetailView
-    [self.FTDetailView setAutoresizesSubviews:YES];
-    [self.FTDetailView setFrame:[UIScreen mainScreen].bounds];
-    [self.FTDetailView.detailCollectionView setFrame:self.FTDetailView.frame];
-    self.FTDetailView.multipleSelectOn = self.multipleSelectOn;
-    self.FTDetailView.multipleSelectMin = self.multipleSelectMin;
-    self.FTDetailView.multipleSelectMax = self.multipleSelectMax;
-    self.FTDetailView.detailCollectionView.allowsMultipleSelection = self.FTDetailView.multipleSelectOn;
-    self.FTDetailView.ImagePickerCollectionView = self.FTimagePickerCollectionView;
-    self.FTDetailView.delegate = self;
+    
+    //Memory allocation for transition animation
+    self.showDetailViewAnimation = [[ShowDetailViewControllerAnimation alloc] init];
+    
+    //Configure FTDetailViewController
+    UIStoryboard *storyBoard = [UIStoryboard storyboardWithName:@"FTImagePickerStoryBoard" bundle:nil];
+    self.FTDetailViewController = [storyBoard instantiateViewControllerWithIdentifier:@"FTDetailViewController"];
+    self.FTDetailViewController.multipleSelectOn = self.multipleSelectOn;
+    self.FTDetailViewController.multipleSelectMax = self.multipleSelectMax;
+    self.FTDetailViewController.multipleSelectMin = self.multipleSelectMin;
+    self.FTDetailViewController.ImagePickerCollectionView = self.FTimagePickerCollectionView;
+    self.FTDetailViewController.delegate = (id)self;
+    self.FTDetailViewController.theme = self.theme;
     
     //set cell scaleFactor and scale criteria
     self.scaleCriteria = 1.0;
@@ -53,8 +56,9 @@
             [self fetchAllImageOrVideoFromDevice];
         }
     }
-    //pass assets to detail view
-    self.FTDetailView.allAssets = self.allAssets;
+    //pass assets to detailViewController
+    self.FTDetailViewController.allAssets = self.allAssets;
+    
     //get camera rolls local title
     PHFetchResult *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
     [cameraRoll enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -83,20 +87,14 @@
     //white version
     if(theme == 0){
         self.FTimagePickerCollectionView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
-        self.FTDetailView.detailCollectionView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
         self.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.92 alpha:0.7];
-        self.FTDetailView.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.92 alpha:0.7];
         [self.view setTintColor:[UIColor colorWithWhite:0.25 alpha:1.0]];
-        [self.FTDetailView setTintColor:[UIColor colorWithWhite:0.25 alpha:1.0]];
     }
     //black version
     else if(theme == 1){
         self.FTimagePickerCollectionView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
-        self.FTDetailView.detailCollectionView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
         self.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.08 alpha:0.7];
-        self.FTDetailView.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.08 alpha:0.7];
         [self.view setTintColor:[UIColor colorWithWhite:0.65 alpha:1.0]];
-        [self.FTDetailView setTintColor:[UIColor colorWithWhite:0.65 alpha:1.0]];
     }
 }
 
@@ -111,9 +109,9 @@
         [self fetchImagesOrVideosFromAlbum];
     }
     //pass assets to detail view
-    self.FTDetailView.allAssets = self.allAssets;
+    self.FTDetailViewController.allAssets = self.allAssets;
     [self.FTimagePickerCollectionView reloadData];
-    [self.FTDetailView.detailCollectionView reloadData];
+    [self.FTDetailViewController.detailCollectionView reloadData];
 }
 
 
@@ -204,16 +202,16 @@
     }
     //multiple selection mode
     else{
-        //selection is only available when selected items count is below or equeal to multiple select max count
+        //selection is only available when selected items count is below or equal to multiple select max count
         //This limitation is defined in collectionView shouldSelectItemAtIndexPath method.
         FTImagePickerCollectionViewCell *imagePickerCell = (FTImagePickerCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
         [self selectedCellLayoutChange:imagePickerCell];
-        [self.FTDetailView.detailCollectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+        [self.FTDetailViewController.detailCollectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
         [self.selectedItemsArray addObject:indexPath];
         self.selectedItemCount += 1;
         NSLog(@"selected count %d", (int)self.selectedItemCount);
         //force collectionview in detailview to update selected cell layout
-        [self.FTDetailView collectionView:self.FTDetailView.detailCollectionView didSelectItemAtIndexPath:indexPath];
+        [self.FTDetailViewController collectionView:self.FTDetailViewController.detailCollectionView didSelectItemAtIndexPath:indexPath];
         //select button shows only when a user selects items more than the minimum number
         if(self.selectedItemCount >= self.multipleSelectMin){
             self.selectBtn.hidden = NO;
@@ -247,7 +245,7 @@
     //multiple selection mode
     FTImagePickerCollectionViewCell *imagePickerCell = (FTImagePickerCollectionViewCell *) [collectionView cellForItemAtIndexPath:indexPath];
     [self deselectedCellLayoutChange:imagePickerCell];
-    [self.FTDetailView.detailCollectionView deselectItemAtIndexPath:indexPath animated:NO];
+    [self.FTDetailViewController.detailCollectionView deselectItemAtIndexPath:indexPath animated:NO];
     for(int i = 0; i < self.selectedItemsArray.count; i++){
         if(self.selectedItemsArray[i] == indexPath){
             [self.selectedItemsArray removeObjectAtIndex:i];
@@ -256,7 +254,7 @@
     self.selectedItemCount -= 1;
     NSLog(@"selected count %d", (int)self.selectedItemCount);
     //force collectionview in detailview to update deselected cell layout
-    [self.FTDetailView collectionView:self.FTDetailView.detailCollectionView didDeselectItemAtIndexPath:indexPath];
+    [self.FTDetailViewController collectionView:self.FTDetailViewController.detailCollectionView didDeselectItemAtIndexPath:indexPath];
     //select button shows only when a user selects items more than the minimum number
     if(self.selectedItemCount < self.multipleSelectMin){
         self.selectBtn.hidden = YES;
@@ -359,17 +357,6 @@
     [self didFinishSelectPhotosFromImagePicker];
 }
 
-//delegate for showing alertController from detailview
-- (void) presentAlertController:(UIAlertController *)alertController{
-    [self presentViewController:alertController animated:YES completion:nil];
-}
-
-//delegate for playing videos
-- (void) presentAVPlayerViewController:(AVPlayerViewController *)AVPlayerViewController AVPlayer:(AVPlayer *)AVPlayer{
-    [self presentViewController:AVPlayerViewController animated:NO completion:nil];
-    [AVPlayer play];
-}
-
 #pragma mark - Back To application from picker
 - (void) didFinishSelectPhotosFromImagePicker{
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
@@ -419,7 +406,7 @@
                 [self.selectedItemsArray removeAllObjects];
                 self.selectedItemCount = 0;
                 [self.FTimagePickerCollectionView reloadData];
-                [self.FTDetailView.detailCollectionView reloadData];
+                [self.FTDetailViewController.detailCollectionView reloadData];
                 self.albumBtn.hidden = NO;
                 self.deleteBtn.hidden = YES;
             });
@@ -451,25 +438,25 @@
     if(sender.state == UIGestureRecognizerStateBegan){
         //synchronize multiselectFactor
         if(self.multipleSelectOn){
-            self.FTDetailView.selectedItemsArray = self.selectedItemsArray;
-            self.FTDetailView.selectedItemCount = self.selectedItemCount;
+            self.FTDetailViewController.selectedItemsArray = self.selectedItemsArray;
+            self.FTDetailViewController.selectedItemCount = self.selectedItemCount;
         }
         //get index path from long pressed point
         CGPoint location = [sender locationInView:self.FTimagePickerCollectionView];
         NSIndexPath *indexPath = [self.FTimagePickerCollectionView indexPathForItemAtPoint:location];
         //set current showing cell's index path value for detailview
-        self.FTDetailView.currentShowingCellsIndexPath = indexPath;
+        self.FTDetailViewController.currentShowingCellsIndexPath = indexPath;
         //scroll to show selected image
-        [self.FTDetailView.detailCollectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+        [self.FTDetailViewController.detailCollectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
         //show sub view
         //selected cell in image picker
         FTImagePickerCollectionViewCell *selectedCell = (FTImagePickerCollectionViewCell *)[self.FTimagePickerCollectionView cellForItemAtIndexPath:indexPath];
         //set select button status in detail view
         if(selectedCell.selected){
-            [self.FTDetailView.selectBtn setTitle:@"Deselect" forState:UIControlStateNormal];
+            [self.FTDetailViewController.selectBtn setTitle:@"Deselect" forState:UIControlStateNormal];
         }
         else{
-            [self.FTDetailView.selectBtn setTitle:@"Select" forState:UIControlStateNormal];
+            [self.FTDetailViewController.selectBtn setTitle:@"Select" forState:UIControlStateNormal];
         }
         //get frame from selected cell and convert it according to collection's superview to get correct cgrect value according to main screen
         CGRect convertedRect = [self.FTimagePickerCollectionView convertRect:selectedCell.frame toView:[self.FTimagePickerCollectionView superview]];
@@ -477,27 +464,27 @@
         UIImageView *imageViewForTransition = [[UIImageView alloc] initWithFrame:convertedRect];
         imageViewForTransition.contentMode = UIViewContentModeScaleAspectFill;
         imageViewForTransition.clipsToBounds = YES;
-        [[PHImageManager defaultManager] requestImageForAsset:self.allAssets[indexPath.row] targetSize:self.FTDetailView.frame.size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        [[PHImageManager defaultManager] requestImageForAsset:self.allAssets[indexPath.row] targetSize:self.FTDetailViewController.view.frame.size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
             imageViewForTransition.image = result;
         }];
-        //make a another image view for hiding cell image
-        UIView *hidingImageView = [[UIView alloc] initWithFrame:self.FTDetailView.detailCollectionView.bounds];
-        hidingImageView.backgroundColor = self.FTDetailView.detailCollectionView.backgroundColor;
-        //add subviews
-        [self.view addSubview:self.FTDetailView];
-        [self.FTDetailView.detailCollectionView addSubview:hidingImageView];
-        [self.view addSubview:imageViewForTransition];
-        //animation effect configuration
-        [self.FTDetailView setAlpha:0.0];
-        [UIView animateWithDuration:0.2 animations:^{
-            [self.FTDetailView setAlpha:1];
-            [imageViewForTransition setFrame:CGRectInset(self.FTDetailView.frame, -0.015*CGRectGetWidth(self.FTDetailView.frame), -0.015*CGRectGetHeight(self.FTDetailView.frame)) ];
-            imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
-        } completion:^(BOOL finished) {
-            [imageViewForTransition removeFromSuperview];
-            [hidingImageView removeFromSuperview];
-        }];
+        self.showDetailViewAnimation.imageViewForTransition = imageViewForTransition;
+        //make another view for hiding cell image
+        UIView *hidingCellView = [[UIView alloc] initWithFrame:convertedRect];
+        hidingCellView.backgroundColor = self.FTDetailViewController.detailCollectionView.backgroundColor;
+        self.showDetailViewAnimation.hidingCellView = hidingCellView;
+        [self.view addSubview:hidingCellView];
+        //Here, need to set destination view controller's delegate!!
+        self.FTDetailViewController.transitioningDelegate = self;
+        //Let presenting view controller be not hidden by presented view controller
+        self.FTDetailViewController.modalPresentationStyle = UIModalPresentationCustom;
+        [self.FTDetailViewController.detailCollectionView setAlpha:1.0];
+        [self presentViewController:self.FTDetailViewController animated:YES completion:nil];
     }
+}
+
+#pragma mark - Transitioning Delegate
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source{
+    return self.showDetailViewAnimation;
 }
 
 #pragma mark - Cell Zoom In and Out
@@ -556,6 +543,48 @@
     
 }
 
-
-
 @end
+
+#pragma mark - Transition Animation
+@implementation ShowDetailViewControllerAnimation
+
+- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext{
+    return 0.2;
+}
+
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext{
+    UIView *containerView = [transitionContext containerView];
+    FTDetailViewController *ToViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    if(!ToViewController){
+        return;
+    }
+    
+    CGRect finalFrame = [transitionContext finalFrameForViewController:ToViewController];
+    CGRect transitionFinalRect = CGRectInset(finalFrame, -0.015*CGRectGetWidth(finalFrame), -0.015*CGRectGetHeight(finalFrame));
+    
+    //View For Fromview Fadeout
+    UIView *backgroundFadeOut = [[UIView alloc] initWithFrame:finalFrame];
+    backgroundFadeOut.backgroundColor = ToViewController.detailCollectionView.backgroundColor;
+    [backgroundFadeOut setAlpha:0.0];
+    
+    [containerView addSubview:ToViewController.view];
+    [containerView addSubview:backgroundFadeOut];
+    [containerView addSubview:self.imageViewForTransition];
+    ToViewController.view.hidden = YES;
+    
+    NSTimeInterval duration = [self transitionDuration:transitionContext];
+    
+    [UIView animateWithDuration:duration animations:^{
+        self.imageViewForTransition.contentMode = UIViewContentModeScaleAspectFit;
+        [self.imageViewForTransition setFrame:transitionFinalRect];
+        [backgroundFadeOut setAlpha:1.0];
+    } completion:^(BOOL finished) {
+        ToViewController.view.hidden = NO;
+        [self.imageViewForTransition removeFromSuperview];
+        [self.hidingCellView removeFromSuperview];
+        [backgroundFadeOut removeFromSuperview];
+        [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+    }];
+}
+@end
+

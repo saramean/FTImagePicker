@@ -15,5 +15,4 @@
 @end
 
 @implementation FTDetailViewCollectionViewCell
-
 @end

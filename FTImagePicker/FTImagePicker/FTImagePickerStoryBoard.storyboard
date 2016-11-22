@@ -197,7 +197,6 @@
                         <gestureRecognizers/>
                     </view>
                     <connections>
-                        <outlet property="FTDetailView" destination="bkV-ob-btx" id="9Di-31-jI3"/>
                         <outlet property="FTimagePickerCollectionView" destination="gC1-7B-3cg" id="xcU-hM-vgM"/>
                         <outlet property="albumBtn" destination="Rhm-1v-pZe" id="qRp-wO-e58"/>
                         <outlet property="buttonBarView" destination="rnd-7c-nEn" id="zfp-C4-Njq"/>
@@ -206,93 +205,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Vf-Kj-VLR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <view contentMode="scaleToFill" id="bkV-ob-btx" customClass="FTDetailView">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <subviews>
-                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="io9-gH-8aC">
-                            <frame key="frameInset"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="BHq-Gv-U4j">
-                                <size key="itemSize" width="375" height="666"/>
-                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                            </collectionViewFlowLayout>
-                            <cells>
-                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="detailViewCells" id="S9b-0n-swT" customClass="FTDetailViewCollectionViewCell">
-                                    <rect key="frame" x="0.0" y="1" width="375" height="666"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="666"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <subviews>
-                                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NF1-hi-aJU">
-                                                <frame key="frameInset"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h4j-dp-bmF">
-                                                        <rect key="frame" x="0.0" y="-1" width="1125" height="1999"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                        <gestureRecognizers/>
-                                                    </imageView>
-                                                </subviews>
-                                            </scrollView>
-                                        </subviews>
-                                    </view>
-                                    <connections>
-                                        <outlet property="detailImageView" destination="h4j-dp-bmF" id="T3E-ux-Wcl"/>
-                                        <outlet property="scrollViewForZoom" destination="NF1-hi-aJU" id="I3Q-o4-VgM"/>
-                                    </connections>
-                                </collectionViewCell>
-                            </cells>
-                            <connections>
-                                <outlet property="dataSource" destination="bkV-ob-btx" id="IJ4-DY-x2T"/>
-                                <outlet property="delegate" destination="bkV-ob-btx" id="H5J-fy-j0Y"/>
-                                <outletCollection property="gestureRecognizers" destination="TgQ-DY-8TL" appends="YES" id="k8T-Ko-4L5"/>
-                            </connections>
-                        </collectionView>
-                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kkj-jB-hpK">
-                            <frame key="frameInset" height="44"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="L37-a2-goy">
-                                    <frame key="frameInset" minX="18" minY="50.00%" width="12.33%" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="Back"/>
-                                    <connections>
-                                        <action selector="dismissViewBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="Ebl-Ip-VOm"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tqw-gY-QKe">
-                                    <frame key="frameInset" minY="50.00%" width="12.36%" height="30" maxX="19"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="Select"/>
-                                    <connections>
-                                        <action selector="selectBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="Lbm-fr-AQz"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9q1-k8-6zx">
-                                    <frame key="frameInset" minX="50.00%" minY="50.00%" width="45" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="Delete"/>
-                                    <connections>
-                                        <action selector="deleteBtnClicked:" destination="bkV-ob-btx" eventType="touchUpInside" id="B0U-1H-O0S"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
-                        </view>
-                    </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <connections>
-                        <outlet property="buttonBarView" destination="Kkj-jB-hpK" id="rmx-Ts-Joj"/>
-                        <outlet property="deleteBtn" destination="9q1-k8-6zx" id="YKJ-zH-TvO"/>
-                        <outlet property="detailCollectionView" destination="io9-gH-8aC" id="BRE-AP-7EG"/>
-                        <outlet property="selectBtn" destination="Tqw-gY-QKe" id="8Mi-cY-LHF"/>
-                    </connections>
-                </view>
                 <screenEdgePanGestureRecognizer minimumNumberOfTouches="1" id="4Zq-Wf-JkX">
                     <rectEdge key="edges" left="YES"/>
                     <connections>
@@ -304,12 +216,6 @@
                         <action selector="showDetailCellLongPressed:" destination="kqN-Lu-1hX" id="uev-XB-u38"/>
                     </connections>
                 </pongPressGestureRecognizer>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="TgQ-DY-8TL">
-                    <connections>
-                        <action selector="dismissViewDownPan:" destination="bkV-ob-btx" id="XjL-Ro-Rt6"/>
-                        <outlet property="delegate" destination="bkV-ob-btx" id="0xA-HM-4mL"/>
-                    </connections>
-                </panGestureRecognizer>
                 <pinchGestureRecognizer id="AhX-qV-Lex">
                     <connections>
                         <action selector="cellZoomInOutPinch:" destination="kqN-Lu-1hX" id="hDZ-g0-Tsk"/>
@@ -317,6 +223,121 @@
                 </pinchGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1288.8" y="89.505247376311857"/>
+        </scene>
+        <!--Detail View Controller-->
+        <scene sceneID="TAA-kr-gbg">
+            <objects>
+                <viewController storyboardIdentifier="FTDetailViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2u4-eW-xcH" customClass="FTDetailViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ozH-8y-Qv4"/>
+                        <viewControllerLayoutGuide type="bottom" id="sDC-wX-MtV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Tah-Xr-z9G">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QCd-bQ-wPT">
+                                <frame key="frameInset"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="KXE-rV-MCS">
+                                    <size key="itemSize" width="375" height="666"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="detailViewCells" id="K5d-7t-jvi" customClass="FTDetailViewCollectionViewCell">
+                                        <rect key="frame" x="0.0" y="1" width="375" height="666"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="666"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YPW-8P-gaD">
+                                                    <subviews>
+                                                        <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6rg-rJ-EKM">
+                                                            <gestureRecognizers/>
+                                                        </imageView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="6rg-rJ-EKM" firstAttribute="centerX" secondItem="YPW-8P-gaD" secondAttribute="centerX" id="2Qq-FT-wl9"/>
+                                                        <constraint firstAttribute="trailing" secondItem="6rg-rJ-EKM" secondAttribute="trailing" id="C8u-Zt-kkc"/>
+                                                        <constraint firstAttribute="bottom" secondItem="6rg-rJ-EKM" secondAttribute="bottom" id="Phr-Ko-NPt"/>
+                                                        <constraint firstItem="6rg-rJ-EKM" firstAttribute="leading" secondItem="YPW-8P-gaD" secondAttribute="leading" id="fSj-dB-bli"/>
+                                                        <constraint firstItem="6rg-rJ-EKM" firstAttribute="top" secondItem="YPW-8P-gaD" secondAttribute="top" id="fbV-pZ-YmL"/>
+                                                        <constraint firstItem="6rg-rJ-EKM" firstAttribute="centerY" secondItem="YPW-8P-gaD" secondAttribute="centerY" id="jkA-TA-Lff"/>
+                                                    </constraints>
+                                                </scrollView>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="YPW-8P-gaD" secondAttribute="bottom" id="5RQ-ey-C6Y"/>
+                                            <constraint firstAttribute="trailing" secondItem="YPW-8P-gaD" secondAttribute="trailing" id="dwN-Yt-x3Z"/>
+                                            <constraint firstItem="YPW-8P-gaD" firstAttribute="leading" secondItem="K5d-7t-jvi" secondAttribute="leading" id="kUf-dz-tME"/>
+                                            <constraint firstItem="YPW-8P-gaD" firstAttribute="top" secondItem="K5d-7t-jvi" secondAttribute="top" id="ktl-jT-xT4"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="detailImageView" destination="6rg-rJ-EKM" id="mDT-bo-yXH"/>
+                                            <outlet property="scrollViewForZoom" destination="YPW-8P-gaD" id="axf-pi-jPV"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="2u4-eW-xcH" id="Mof-Iy-pop"/>
+                                    <outlet property="delegate" destination="2u4-eW-xcH" id="MJh-IL-tge"/>
+                                    <outletCollection property="gestureRecognizers" destination="8md-hl-OmK" appends="YES" id="CMM-rl-5tk"/>
+                                </connections>
+                            </collectionView>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bk1-xL-pNV">
+                                <frame key="frameInset" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="poF-gY-9h0">
+                                        <frame key="frameInset" minX="18" minY="50.00%" width="12.33%" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Back"/>
+                                        <connections>
+                                            <action selector="dismissViewControllerBtnClicked:" destination="2u4-eW-xcH" eventType="touchUpInside" id="zAn-yf-BAV"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PRH-EP-87y">
+                                        <frame key="frameInset" minY="50.00%" width="12.36%" height="30" maxX="19"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Select"/>
+                                        <connections>
+                                            <action selector="selectBtnClicked:" destination="2u4-eW-xcH" eventType="touchUpInside" id="opt-6A-GM5"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XtY-ig-eXF">
+                                        <frame key="frameInset" minX="50.00%" minY="50.00%" width="45" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Delete"/>
+                                        <connections>
+                                            <action selector="deleteBtnClicked:" destination="2u4-eW-xcH" eventType="touchUpInside" id="hik-Zr-fMA"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="buttonBarView" destination="Bk1-xL-pNV" id="EFq-20-qWg"/>
+                        <outlet property="deleteBtn" destination="XtY-ig-eXF" id="zFC-aS-gNV"/>
+                        <outlet property="detailCollectionView" destination="QCd-bQ-wPT" id="vZa-Xd-LhQ"/>
+                        <outlet property="selectBtn" destination="PRH-EP-87y" id="rHp-I4-OaN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f5D-Ip-Zbi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="8md-hl-OmK">
+                    <connections>
+                        <action selector="dismissViewControllerDownPan:" destination="2u4-eW-xcH" id="KnV-oC-Bjq"/>
+                        <outlet property="delegate" destination="2u4-eW-xcH" id="Kak-b5-VhX"/>
+                    </connections>
+                </panGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="2164" y="90"/>
         </scene>
     </scenes>
     <color key="tintColor" red="1" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>

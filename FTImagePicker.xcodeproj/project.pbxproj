@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4E403F421DB8B2DE0037B2B2 /* FTImagePickerCells.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E403F411DB8B2DE0037B2B2 /* FTImagePickerCells.m */; };
+		4E6F64631DDECFE400706CF4 /* FTDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E6F64621DDECFE400706CF4 /* FTDetailViewController.m */; };
 		4E8BBE031DBF4EF40072BAD2 /* WorkingProcess in Resources */ = {isa = PBXBuildFile; fileRef = 4E8BBE021DBF4EF40072BAD2 /* WorkingProcess */; };
 		4EA41DC51DB894EF00356832 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DC41DB894EF00356832 /* main.m */; };
 		4EA41DC81DB894EF00356832 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DC71DB894EF00356832 /* AppDelegate.m */; };
@@ -20,13 +21,14 @@
 		4EA41DE21DB898A700356832 /* FTImagePickerAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA41DE11DB898A700356832 /* FTImagePickerAssets.xcassets */; };
 		4EA41DE51DB89D3F00356832 /* FTAlbumLIstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DE41DB89D3F00356832 /* FTAlbumLIstViewController.m */; };
 		4EA41DE81DB89D5E00356832 /* FTImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DE71DB89D5E00356832 /* FTImagePickerViewController.m */; };
-		4EA41DEB1DB89D7D00356832 /* FTDetailView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DEA1DB89D7D00356832 /* FTDetailView.m */; };
 		4EA41DF71DB8A17700356832 /* FTImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DF61DB8A17700356832 /* FTImagePicker.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4E403F411DB8B2DE0037B2B2 /* FTImagePickerCells.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FTImagePickerCells.m; path = FTImagePicker/FTImagePickerCells.m; sourceTree = "<group>"; };
 		4E403F431DB8B3010037B2B2 /* FTImagePickerCells.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FTImagePickerCells.h; path = FTImagePicker/FTImagePickerCells.h; sourceTree = "<group>"; };
+		4E6F64611DDECFE400706CF4 /* FTDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FTDetailViewController.h; path = FTImagePicker/FTDetailViewController.h; sourceTree = "<group>"; };
+		4E6F64621DDECFE400706CF4 /* FTDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FTDetailViewController.m; path = FTImagePicker/FTDetailViewController.m; sourceTree = "<group>"; };
 		4E8BBE021DBF4EF40072BAD2 /* WorkingProcess */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = WorkingProcess; path = FTImagePicker/WorkingProcess; sourceTree = "<group>"; };
 		4EA41DC01DB894EF00356832 /* FTImagePicker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FTImagePicker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EA41DC41DB894EF00356832 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -45,8 +47,6 @@
 		4EA41DE41DB89D3F00356832 /* FTAlbumLIstViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FTAlbumLIstViewController.m; path = FTImagePicker/FTAlbumLIstViewController.m; sourceTree = "<group>"; };
 		4EA41DE61DB89D5E00356832 /* FTImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FTImagePickerViewController.h; path = FTImagePicker/FTImagePickerViewController.h; sourceTree = "<group>"; };
 		4EA41DE71DB89D5E00356832 /* FTImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FTImagePickerViewController.m; path = FTImagePicker/FTImagePickerViewController.m; sourceTree = "<group>"; };
-		4EA41DE91DB89D7D00356832 /* FTDetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FTDetailView.h; path = FTImagePicker/FTDetailView.h; sourceTree = "<group>"; };
-		4EA41DEA1DB89D7D00356832 /* FTDetailView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FTDetailView.m; path = FTImagePicker/FTDetailView.m; sourceTree = "<group>"; };
 		4EA41DF61DB8A17700356832 /* FTImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FTImagePicker.m; path = FTImagePicker/FTImagePicker.m; sourceTree = "<group>"; };
 		4EA41DF81DB8A18B00356832 /* FTImagePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FTImagePicker.h; path = FTImagePicker/FTImagePicker.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,8 +88,8 @@
 				4EA41DE41DB89D3F00356832 /* FTAlbumLIstViewController.m */,
 				4EA41DE61DB89D5E00356832 /* FTImagePickerViewController.h */,
 				4EA41DE71DB89D5E00356832 /* FTImagePickerViewController.m */,
-				4EA41DE91DB89D7D00356832 /* FTDetailView.h */,
-				4EA41DEA1DB89D7D00356832 /* FTDetailView.m */,
+				4E6F64611DDECFE400706CF4 /* FTDetailViewController.h */,
+				4E6F64621DDECFE400706CF4 /* FTDetailViewController.m */,
 				4E403F431DB8B3010037B2B2 /* FTImagePickerCells.h */,
 				4E403F411DB8B2DE0037B2B2 /* FTImagePickerCells.m */,
 				4EA41DDF1DB8959600356832 /* FTImagePickerStoryBoard.storyboard */,
@@ -204,9 +204,9 @@
 				4EA41DE81DB89D5E00356832 /* FTImagePickerViewController.m in Sources */,
 				4EA41DE51DB89D3F00356832 /* FTAlbumLIstViewController.m in Sources */,
 				4EA41DCB1DB894EF00356832 /* ViewController.m in Sources */,
-				4EA41DEB1DB89D7D00356832 /* FTDetailView.m in Sources */,
 				4EA41DD11DB894EF00356832 /* FTImagePicker.xcdatamodeld in Sources */,
 				4EA41DC81DB894EF00356832 /* AppDelegate.m in Sources */,
+				4E6F64631DDECFE400706CF4 /* FTDetailViewController.m in Sources */,
 				4EA41DC51DB894EF00356832 /* main.m in Sources */,
 				4E403F421DB8B2DE0037B2B2 /* FTImagePickerCells.m in Sources */,
 			);
