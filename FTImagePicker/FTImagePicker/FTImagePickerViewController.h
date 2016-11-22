@@ -19,7 +19,7 @@
 @end
 
 
-@interface FTImagePickerViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FTDetailViewControllerDelegate, cellSelectionLayoutChange, UIViewControllerTransitioningDelegate>
+@interface FTImagePickerViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FTDetailViewControllerDelegate, cellSelectionLayoutChange, UIViewControllerTransitioningDelegate,UIViewControllerPreviewingDelegate>
 @property (strong, nonatomic) NSMutableArray *allAssets;
 @property (weak, nonatomic) IBOutlet UICollectionView *FTimagePickerCollectionView;
 @property (strong, nonatomic) FTDetailViewController *FTDetailViewController;
@@ -41,6 +41,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *albumBtn;
 @property (assign, nonatomic) BOOL syncedAlbum;
 @property (strong, nonatomic) ShowDetailViewControllerAnimation *showDetailViewAnimation;
+@property (strong, nonatomic) IBOutlet UILongPressGestureRecognizer *longPressGesture;
+@property (strong, nonatomic) NSIndexPath *indexPathForSelectedCell;
 
 
 - (IBAction)backToAlbumLeftEdgePan:(UIScreenEdgePanGestureRecognizer *)sender;

@@ -58,6 +58,25 @@
     }
     //pass assets to detailViewController
     self.FTDetailViewController.allAssets = self.allAssets;
+    //Configure FTDetailViewController's CollectionView
+    UICollectionViewFlowLayout *collectionViewLayout = [[UICollectionViewFlowLayout alloc] init];
+    collectionViewLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    collectionViewLayout.minimumLineSpacing = 0;
+    collectionViewLayout.minimumInteritemSpacing = 0;
+    self.FTDetailViewController.detailCollectionView = [[UICollectionView alloc] initWithFrame:self.FTDetailViewController.view.bounds collectionViewLayout:collectionViewLayout];
+    self.FTDetailViewController.detailCollectionView.allowsMultipleSelection = self.FTDetailViewController.multipleSelectOn;
+    self.FTDetailViewController.detailCollectionView.delegate = self.FTDetailViewController;
+    self.FTDetailViewController.detailCollectionView.dataSource = self.FTDetailViewController;
+    self.FTDetailViewController.detailCollectionView.pagingEnabled = YES;
+    [self.FTDetailViewController.detailCollectionView setUserInteractionEnabled:YES];
+    [self.FTDetailViewController.detailCollectionView registerClass:[FTDetailViewCollectionViewCell class] forCellWithReuseIdentifier:@"detailViewCells"];
+    [self.FTDetailViewController.view insertSubview:self.FTDetailViewController.detailCollectionView belowSubview:self.FTDetailViewController.buttonBarView];
+    
+    //3d touch Configuration
+    if(self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        self.longPressGesture.enabled = NO;
+        [self registerForPreviewingWithDelegate:(id)self sourceView:self.FTimagePickerCollectionView];
+    }
     
     //get camera rolls local title
     PHFetchResult *cameraRoll = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
@@ -89,12 +108,14 @@
         self.FTimagePickerCollectionView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
         self.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.92 alpha:0.7];
         [self.view setTintColor:[UIColor colorWithWhite:0.25 alpha:1.0]];
+        self.FTDetailViewController.detailCollectionView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
     }
     //black version
     else if(theme == 1){
         self.FTimagePickerCollectionView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
         self.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.08 alpha:0.7];
         [self.view setTintColor:[UIColor colorWithWhite:0.65 alpha:1.0]];
+        self.FTDetailViewController.detailCollectionView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
     }
 }
 
@@ -434,6 +455,7 @@
 }
 
 #pragma mark - See Detail Photo
+//Present DetailViewController by longPress(3d touch is not available)
 - (IBAction)showDetailCellLongPressed:(UILongPressGestureRecognizer *)sender {
     if(sender.state == UIGestureRecognizerStateBegan){
         //synchronize multiselectFactor
@@ -446,8 +468,6 @@
         NSIndexPath *indexPath = [self.FTimagePickerCollectionView indexPathForItemAtPoint:location];
         //set current showing cell's index path value for detailview
         self.FTDetailViewController.currentShowingCellsIndexPath = indexPath;
-        //scroll to show selected image
-        [self.FTDetailViewController.detailCollectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
         //show sub view
         //selected cell in image picker
         FTImagePickerCollectionViewCell *selectedCell = (FTImagePickerCollectionViewCell *)[self.FTimagePickerCollectionView cellForItemAtIndexPath:indexPath];
@@ -480,6 +500,47 @@
         [self.FTDetailViewController.detailCollectionView setAlpha:1.0];
         [self presentViewController:self.FTDetailViewController animated:YES completion:nil];
     }
+}
+//3d touch Peek
+- (UIViewController *)previewingContext:(id<UIViewControllerPreviewing>)previewingContext viewControllerForLocation:(CGPoint)location{
+    if([self.FTimagePickerCollectionView indexPathForItemAtPoint:location]){
+        NSLog(@"preview");
+        NSIndexPath *selectedCellsIndexPath = [self.FTimagePickerCollectionView indexPathForItemAtPoint:location];
+        FTImagePickerCollectionViewCell *selectedCell = (__kindof UICollectionViewCell *) [self.FTimagePickerCollectionView cellForItemAtIndexPath:selectedCellsIndexPath];
+        [previewingContext setSourceRect:selectedCell.frame];
+        self.indexPathForSelectedCell = selectedCellsIndexPath;
+        
+        //synchronize multiselectFactor
+        if(self.multipleSelectOn){
+            self.FTDetailViewController.selectedItemsArray = self.selectedItemsArray;
+            self.FTDetailViewController.selectedItemCount = self.selectedItemCount;
+        }
+        //set current showing cell's index path value for detailview
+        self.FTDetailViewController.currentShowingCellsIndexPath = self.indexPathForSelectedCell;
+        //set collection view of detailview controller to be seen
+        [self.FTDetailViewController.detailCollectionView setAlpha:1.0];
+        
+        return self.FTDetailViewController;
+    }
+    else{
+        return nil;
+    }
+}
+//3d touch Pop
+- (void)previewingContext:(id<UIViewControllerPreviewing>)previewingContext commitViewController:(UIViewController *)viewControllerToCommit{
+    //show sub view
+    //selected cell in image picker
+    FTImagePickerCollectionViewCell *selectedCell = (FTImagePickerCollectionViewCell *)[self.FTimagePickerCollectionView cellForItemAtIndexPath:self.indexPathForSelectedCell];
+    //set select button status in detail view
+    if(selectedCell.selected){
+        [self.FTDetailViewController.selectBtn setTitle:@"Deselect" forState:UIControlStateNormal];
+    }
+    else{
+        [self.FTDetailViewController.selectBtn setTitle:@"Select" forState:UIControlStateNormal];
+    }
+    //Let presenting view controller be not hidden by presented view controller
+    self.FTDetailViewController.modalPresentationStyle = UIModalPresentationCustom;
+    [self presentViewController:self.FTDetailViewController animated:YES completion:nil];
 }
 
 #pragma mark - Transitioning Delegate
@@ -540,8 +601,19 @@
         self.FTimagePickerCollectionView.scrollEnabled = YES;
         self.scaleCriteria = 1.0;
     }
-    
 }
+#pragma mark - Check 3d touch Availibility
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection{
+    [super traitCollectionDidChange:previousTraitCollection];
+    NSLog(@"changed");
+    if(self.traitCollection.forceTouchCapability == UIForceTouchCapabilityAvailable){
+        self.longPressGesture.enabled = NO;
+    }
+    else{
+        self.longPressGesture.enabled = YES;
+    }
+}
+
 
 @end
 

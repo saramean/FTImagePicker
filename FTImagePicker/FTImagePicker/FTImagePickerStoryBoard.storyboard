@@ -201,6 +201,7 @@
                         <outlet property="albumBtn" destination="Rhm-1v-pZe" id="qRp-wO-e58"/>
                         <outlet property="buttonBarView" destination="rnd-7c-nEn" id="zfp-C4-Njq"/>
                         <outlet property="deleteBtn" destination="Y6A-gK-ope" id="HuT-3K-Epb"/>
+                        <outlet property="longPressGesture" destination="okw-ZB-d2C" id="v0u-2x-24E"/>
                         <outlet property="selectBtn" destination="wL4-mF-YhO" id="nKN-yq-0r0"/>
                     </connections>
                 </viewController>
@@ -236,59 +237,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QCd-bQ-wPT">
-                                <frame key="frameInset"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="KXE-rV-MCS">
-                                    <size key="itemSize" width="375" height="666"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="detailViewCells" id="K5d-7t-jvi" customClass="FTDetailViewCollectionViewCell">
-                                        <rect key="frame" x="0.0" y="1" width="375" height="666"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="666"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YPW-8P-gaD">
-                                                    <subviews>
-                                                        <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6rg-rJ-EKM">
-                                                            <gestureRecognizers/>
-                                                        </imageView>
-                                                    </subviews>
-                                                    <constraints>
-                                                        <constraint firstItem="6rg-rJ-EKM" firstAttribute="centerX" secondItem="YPW-8P-gaD" secondAttribute="centerX" id="2Qq-FT-wl9"/>
-                                                        <constraint firstAttribute="trailing" secondItem="6rg-rJ-EKM" secondAttribute="trailing" id="C8u-Zt-kkc"/>
-                                                        <constraint firstAttribute="bottom" secondItem="6rg-rJ-EKM" secondAttribute="bottom" id="Phr-Ko-NPt"/>
-                                                        <constraint firstItem="6rg-rJ-EKM" firstAttribute="leading" secondItem="YPW-8P-gaD" secondAttribute="leading" id="fSj-dB-bli"/>
-                                                        <constraint firstItem="6rg-rJ-EKM" firstAttribute="top" secondItem="YPW-8P-gaD" secondAttribute="top" id="fbV-pZ-YmL"/>
-                                                        <constraint firstItem="6rg-rJ-EKM" firstAttribute="centerY" secondItem="YPW-8P-gaD" secondAttribute="centerY" id="jkA-TA-Lff"/>
-                                                    </constraints>
-                                                </scrollView>
-                                            </subviews>
-                                        </view>
-                                        <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="YPW-8P-gaD" secondAttribute="bottom" id="5RQ-ey-C6Y"/>
-                                            <constraint firstAttribute="trailing" secondItem="YPW-8P-gaD" secondAttribute="trailing" id="dwN-Yt-x3Z"/>
-                                            <constraint firstItem="YPW-8P-gaD" firstAttribute="leading" secondItem="K5d-7t-jvi" secondAttribute="leading" id="kUf-dz-tME"/>
-                                            <constraint firstItem="YPW-8P-gaD" firstAttribute="top" secondItem="K5d-7t-jvi" secondAttribute="top" id="ktl-jT-xT4"/>
-                                        </constraints>
-                                        <connections>
-                                            <outlet property="detailImageView" destination="6rg-rJ-EKM" id="mDT-bo-yXH"/>
-                                            <outlet property="scrollViewForZoom" destination="YPW-8P-gaD" id="axf-pi-jPV"/>
-                                        </connections>
-                                    </collectionViewCell>
-                                </cells>
-                                <connections>
-                                    <outlet property="dataSource" destination="2u4-eW-xcH" id="Mof-Iy-pop"/>
-                                    <outlet property="delegate" destination="2u4-eW-xcH" id="MJh-IL-tge"/>
-                                    <outletCollection property="gestureRecognizers" destination="8md-hl-OmK" appends="YES" id="CMM-rl-5tk"/>
-                                </connections>
-                            </collectionView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bk1-xL-pNV">
                                 <frame key="frameInset" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
@@ -325,17 +273,10 @@
                     <connections>
                         <outlet property="buttonBarView" destination="Bk1-xL-pNV" id="EFq-20-qWg"/>
                         <outlet property="deleteBtn" destination="XtY-ig-eXF" id="zFC-aS-gNV"/>
-                        <outlet property="detailCollectionView" destination="QCd-bQ-wPT" id="vZa-Xd-LhQ"/>
                         <outlet property="selectBtn" destination="PRH-EP-87y" id="rHp-I4-OaN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f5D-Ip-Zbi" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <panGestureRecognizer minimumNumberOfTouches="1" id="8md-hl-OmK">
-                    <connections>
-                        <action selector="dismissViewControllerDownPan:" destination="2u4-eW-xcH" id="KnV-oC-Bjq"/>
-                        <outlet property="delegate" destination="2u4-eW-xcH" id="Kak-b5-VhX"/>
-                    </connections>
-                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2164" y="90"/>
         </scene>

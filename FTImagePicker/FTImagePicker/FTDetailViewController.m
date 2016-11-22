@@ -19,12 +19,18 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor = [UIColor clearColor];
     self.dismissAnimation = [[DismissDetailViewControllerAnimation alloc] init];
-    
-    NSLog(@"curent indexpath %@", self.currentShowingCellsIndexPath);
-    [self.detailCollectionView scrollToItemAtIndexPath:self.currentShowingCellsIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-    
+        
     //set Theme of album list
     [self changeTheme:self.theme];
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    //add pangesture for dismissing ViewController
+    self.panGesture = [[UIPanGestureRecognizer alloc] init];
+    self.panGesture.delegate = self;
+    [self.panGesture addTarget:self action:@selector(dismissViewControllerDownPan:)];
+    [self.detailCollectionView addGestureRecognizer:self.panGesture];
+    [self.detailCollectionView scrollToItemAtIndexPath:self.currentShowingCellsIndexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -36,19 +42,19 @@
     return YES;
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    NSLog(@"touched");
+}
+
 #pragma mark - Theme
 - (void) changeTheme: (NSInteger) theme{
     //white version
     if(theme == 0){
-        //self.view.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
-        self.detailCollectionView.backgroundColor = [UIColor colorWithWhite:1.0 alpha:1.0];
         self.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.92 alpha:0.7];
         [self.view setTintColor:[UIColor colorWithWhite:0.25 alpha:1.0]];
     }
     //black version
     else if(theme == 1){
-        //self.view.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
-        self.detailCollectionView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:1.0];
         self.buttonBarView.backgroundColor = [UIColor colorWithWhite:0.08 alpha:0.7];
         [self.view setTintColor:[UIColor colorWithWhite:0.65 alpha:1.0]];
     }
@@ -223,7 +229,9 @@
 
 #pragma mark - Collection View Configuring
 - (CGSize) collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
-    return self.view.bounds.size;
+    CGFloat width = self.detailCollectionView.bounds.size.width - self.detailCollectionView.contentInset.left - self.detailCollectionView.contentInset.right;
+    CGFloat height = self.detailCollectionView.bounds.size.height - self.detailCollectionView.contentInset.top - self.detailCollectionView.contentInset.bottom;
+    return CGSizeMake(width, height);
 }
 
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -239,6 +247,7 @@
 //if movement toward y direction is larger than direction toward x, gesture recognizer begins
 //else, collection view's normal pan handle its scroll
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    NSLog(@"bam");
     CGPoint location = [gestureRecognizer locationInView:self.view];
     if([gestureRecognizer isKindOfClass:[UIScreenEdgePanGestureRecognizer class]]){
         //For preventing dismiss video player when video player control bar slider controlled
@@ -344,7 +353,7 @@
     self.dismissAnimation.imageViewForTransition = imageViewForTransition;
     //Image picker cell for destination point of transition
     FTImagePickerCollectionViewCell *selectedCellInImagePicker = (FTImagePickerCollectionViewCell *) [self.ImagePickerCollectionView cellForItemAtIndexPath:indexPath];
-    //convert frame according to super view of iamgepicker
+    //convert frame according to super view of imagepicker
     if(!selectedCellInImagePicker){
         selectedCellInImagePicker = [self.ImagePickerCollectionView dequeueReusableCellWithReuseIdentifier:@"imagePickerCells" forIndexPath:indexPath];
     }
@@ -485,6 +494,33 @@
     }];
 }
 
+#pragma mark - Preview Action
+- (NSArray<id<UIPreviewActionItem>> *)previewActionItems{
+    UIPreviewAction *deleteAction = [UIPreviewAction actionWithTitle:@"Delete" style:UIPreviewActionStyleDestructive handler:^(UIPreviewAction * _Nonnull action, UIViewController * _Nonnull previewViewController) {
+        NSLog(@"Delete");
+        NSArray<NSIndexPath *> *itemToBeDeleted = [NSArray arrayWithArray:[self.detailCollectionView indexPathsForVisibleItems]];
+        PHAsset *assetWillbeDeleted = self.allAssets[itemToBeDeleted[0].row];
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+            [PHAssetChangeRequest deleteAssets:@[assetWillbeDeleted]];
+        } completionHandler:^(BOOL success, NSError * _Nullable error) {
+            if(success){
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.allAssets removeObjectAtIndex:(int) itemToBeDeleted[0].row];
+                    [self.ImagePickerCollectionView reloadData];
+                    [self.detailCollectionView reloadData];
+                });
+            }
+            else{
+                NSLog(@"Error %@", error.localizedDescription);
+            }
+        }];
+    }];
+    UIPreviewAction *cancelAction = [UIPreviewAction actionWithTitle:@"Cancel" style:UIPreviewActionStyleDefault handler:^(UIPreviewAction * _Nonnull action, UIViewController * _Nonnull previewViewController) {
+        NSLog(@"Canceled");
+    }];
+    
+    return @[deleteAction, cancelAction];
+}
 
 @end
 

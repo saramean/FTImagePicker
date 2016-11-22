@@ -28,7 +28,7 @@
 @property (strong, nonatomic) NSMutableArray *selectedItemsArray;
 @property (nonatomic) NSInteger selectedItemCount;
 @property (strong, nonatomic) UICollectionView *ImagePickerCollectionView;
-@property (weak, nonatomic) IBOutlet UICollectionView *detailCollectionView;
+@property (strong, nonatomic) UICollectionView *detailCollectionView;
 @property (weak, nonatomic) IBOutlet UIButton *selectBtn;
 @property (weak, nonatomic) IBOutlet UIButton *deleteBtn;
 @property (strong, nonatomic) UIImageView *imageViewForTransition;
@@ -38,6 +38,7 @@
 @property (weak, nonatomic) IBOutlet UIView *buttonBarView;
 @property (assign, nonatomic) NSInteger theme;
 @property (strong, nonatomic) DismissDetailViewControllerAnimation *dismissAnimation;
+@property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
 
 - (IBAction)dismissViewControllerDownPan:(UIPanGestureRecognizer *)sender;
 - (IBAction)dismissViewControllerBtnClicked:(UIButton *)sender;
