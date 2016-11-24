@@ -31,17 +31,16 @@
 
 @interface FTImagePickerCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *thumbnailForCells;
-
 @end
 
-//@interface FTDetailViewCollectionViewCell : UICollectionViewCell
-//@property (strong, nonatomic) IBOutlet UIImageView *detailImageView;
-//@property (strong, nonatomic) IBOutlet UIScrollView *scrollViewForZoom;
-//
-//@end
+@interface FTImagePickerCollectionViewHeaderView : UICollectionReusableView
+@property (weak, nonatomic) IBOutlet UILabel *albumNameForHeader;
+@property (weak, nonatomic) IBOutlet UILabel *descForAlbum;
+@end
 
 @interface FTDetailViewCollectionViewCell : UICollectionViewCell
 @property (strong, nonatomic) UIImageView *detailImageView;
 @property (strong, nonatomic) UIScrollView *scrollViewForZoom;
 
 @end
+

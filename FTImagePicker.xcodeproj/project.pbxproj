@@ -18,10 +18,10 @@
 		4EA41DD31DB894EF00356832 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA41DD21DB894EF00356832 /* Assets.xcassets */; };
 		4EA41DD61DB894EF00356832 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EA41DD41DB894EF00356832 /* LaunchScreen.storyboard */; };
 		4EA41DE01DB8959600356832 /* FTImagePickerStoryBoard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EA41DDF1DB8959600356832 /* FTImagePickerStoryBoard.storyboard */; };
-		4EA41DE21DB898A700356832 /* FTImagePickerAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4EA41DE11DB898A700356832 /* FTImagePickerAssets.xcassets */; };
 		4EA41DE51DB89D3F00356832 /* FTAlbumLIstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DE41DB89D3F00356832 /* FTAlbumLIstViewController.m */; };
 		4EA41DE81DB89D5E00356832 /* FTImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DE71DB89D5E00356832 /* FTImagePickerViewController.m */; };
 		4EA41DF71DB8A17700356832 /* FTImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA41DF61DB8A17700356832 /* FTImagePicker.m */; };
+		B49C0D4A1DE6C3BE00A6F729 /* FTImagePickerAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B49C0D491DE6C3BE00A6F729 /* FTImagePickerAssets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,13 +42,13 @@
 		4EA41DD51DB894EF00356832 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4EA41DD71DB894EF00356832 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = FTImagePicker/Info.plist; sourceTree = "<group>"; };
 		4EA41DDF1DB8959600356832 /* FTImagePickerStoryBoard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = FTImagePickerStoryBoard.storyboard; path = FTImagePicker/FTImagePickerStoryBoard.storyboard; sourceTree = "<group>"; };
-		4EA41DE11DB898A700356832 /* FTImagePickerAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = FTImagePickerAssets.xcassets; path = FTImagePicker/FTImagePickerAssets.xcassets; sourceTree = "<group>"; };
 		4EA41DE31DB89D3F00356832 /* FTAlbumLIstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FTAlbumLIstViewController.h; path = FTImagePicker/FTAlbumLIstViewController.h; sourceTree = "<group>"; };
 		4EA41DE41DB89D3F00356832 /* FTAlbumLIstViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FTAlbumLIstViewController.m; path = FTImagePicker/FTAlbumLIstViewController.m; sourceTree = "<group>"; };
 		4EA41DE61DB89D5E00356832 /* FTImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FTImagePickerViewController.h; path = FTImagePicker/FTImagePickerViewController.h; sourceTree = "<group>"; };
 		4EA41DE71DB89D5E00356832 /* FTImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FTImagePickerViewController.m; path = FTImagePicker/FTImagePickerViewController.m; sourceTree = "<group>"; };
 		4EA41DF61DB8A17700356832 /* FTImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FTImagePicker.m; path = FTImagePicker/FTImagePicker.m; sourceTree = "<group>"; };
 		4EA41DF81DB8A18B00356832 /* FTImagePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FTImagePicker.h; path = FTImagePicker/FTImagePicker.h; sourceTree = "<group>"; };
+		B49C0D491DE6C3BE00A6F729 /* FTImagePickerAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = FTImagePickerAssets.xcassets; path = FTImagePicker/FTImagePickerAssets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,7 +94,7 @@
 				4E403F411DB8B2DE0037B2B2 /* FTImagePickerCells.m */,
 				4EA41DDF1DB8959600356832 /* FTImagePickerStoryBoard.storyboard */,
 				4E8BBE021DBF4EF40072BAD2 /* WorkingProcess */,
-				4EA41DE11DB898A700356832 /* FTImagePickerAssets.xcassets */,
+				B49C0D491DE6C3BE00A6F729 /* FTImagePickerAssets.xcassets */,
 			);
 			path = FTImagePicker;
 			sourceTree = "<group>";
@@ -151,7 +151,7 @@
 		4EA41DB81DB894EF00356832 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Parkfantagram /inc.";
 				TargetAttributes = {
 					4EA41DBF1DB894EF00356832 = {
@@ -186,10 +186,10 @@
 			files = (
 				4E8BBE031DBF4EF40072BAD2 /* WorkingProcess in Resources */,
 				4EA41DD61DB894EF00356832 /* LaunchScreen.storyboard in Resources */,
+				B49C0D4A1DE6C3BE00A6F729 /* FTImagePickerAssets.xcassets in Resources */,
 				4EA41DE01DB8959600356832 /* FTImagePickerStoryBoard.storyboard in Resources */,
 				4EA41DD31DB894EF00356832 /* Assets.xcassets in Resources */,
 				4EA41DCE1DB894EF00356832 /* Main.storyboard in Resources */,
-				4EA41DE21DB898A700356832 /* FTImagePickerAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +254,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -301,6 +302,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

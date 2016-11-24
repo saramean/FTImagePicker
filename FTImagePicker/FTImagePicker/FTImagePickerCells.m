@@ -14,6 +14,9 @@
 @implementation FTImagePickerCollectionViewCell
 @end
 
+@implementation FTImagePickerCollectionViewHeaderView
+@end
+
 @implementation FTDetailViewCollectionViewCell
 - (instancetype)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
@@ -29,3 +32,4 @@
     return self;
 }
 @end
+

@@ -337,11 +337,21 @@
     return cell;
 }
 
+
 //set cell size delegate
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath{
     float screenWidth = [UIScreen mainScreen].bounds.size.width;
     float cellWidth = floor((screenWidth-(self.cellScaleFactor-1))/self.cellScaleFactor);
     return CGSizeMake(cellWidth, cellWidth);
+}
+
+#pragma mark Collection View Header
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath{
+    FTImagePickerCollectionViewHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"ImagePickerCollectionViewHeader" forIndexPath:indexPath];
+    
+    headerView.albumNameForHeader.text = self.albumName;
+    headerView.descForAlbum.text = @"";
+    return headerView;
 }
 //
 //- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section{
