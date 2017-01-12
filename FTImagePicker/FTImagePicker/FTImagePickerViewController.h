@@ -11,6 +11,16 @@
 #import "FTImagePickerCells.h"
 @class ShowDetailViewControllerAnimation;
 
+typedef NS_ENUM(NSUInteger, MultiSelectionDistanceTransition) {
+    MultiSelectionDistanceTransitionNone,
+    MultiSelectionDistanceTransitionIncreasing,
+    MultiSelectionDistanceTransitionDecreasing,
+};
+
+@interface PHAsset (TKFetchAssetsInCollection)
++(PHFetchResult *) fetchAssetInAssetCollection:(PHAssetCollection *) collection withSortDescriptorKey:(NSString *)sortDescriptorKey withMediaType:(PHAssetMediaType) mediaType withMediaSubtypes:(NSArray<NSNumber *> *) mediaSubtypes;
+@end
+
 @protocol FTImagePickerViewControllerDelegate <NSObject>
 
 - (void) getSelectedImageAssetsFromImagePicker: (NSMutableArray *) selectedAssetsArray;
@@ -19,7 +29,7 @@
 @end
 
 
-@interface FTImagePickerViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FTDetailViewControllerDelegate, cellSelectionLayoutChange, UIViewControllerTransitioningDelegate,UIViewControllerPreviewingDelegate>
+@interface FTImagePickerViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, FTDetailViewControllerDelegate, cellSelectionLayoutChange, UIViewControllerTransitioningDelegate,UIViewControllerPreviewingDelegate, UIGestureRecognizerDelegate>
 @property (strong, nonatomic) NSMutableArray *allAssets;
 @property (weak, nonatomic) IBOutlet UICollectionView *FTimagePickerCollectionView;
 @property (strong, nonatomic) FTDetailViewController *FTDetailViewController;
@@ -30,6 +40,7 @@
 @property (nonatomic) NSInteger multipleSelectMax;
 @property (nonatomic) NSInteger selectedItemCount;
 @property (nonatomic) NSInteger mediaTypeToUse;
+@property (strong, nonatomic) NSArray *mediaSubTypeToUse;
 @property (nonatomic) NSString *cameraRollLocalTitle;
 @property (strong, nonatomic) NSMutableArray *selectedItemsArray;
 @property (weak, nonatomic) IBOutlet UIButton *selectBtn;
@@ -43,7 +54,14 @@
 @property (strong, nonatomic) ShowDetailViewControllerAnimation *showDetailViewAnimation;
 @property (strong, nonatomic) IBOutlet UILongPressGestureRecognizer *longPressGesture;
 @property (strong, nonatomic) NSIndexPath *indexPathForSelectedCell;
-
+@property (assign, nonatomic) BOOL cellPinchZoomOn;
+@property (assign, nonatomic) NSInteger numberOfCellsInLine;
+@property (assign, nonatomic) CGFloat imagePickerHeaderHeight;
+//Multi Selection by pan gesture
+@property (strong, nonatomic) IBOutlet UIPanGestureRecognizer *panGestureForMultiSelection;
+@property (assign, nonatomic) CGPoint startPoint;
+@property (assign, nonatomic) CGPoint endPoint;
+@property (assign, nonatomic) BOOL selectionMode;
 
 - (IBAction)backToAlbumLeftEdgePan:(UIScreenEdgePanGestureRecognizer *)sender;
 - (IBAction)backToAlbumBtnClicked:(UIButton *)sender;
@@ -52,6 +70,7 @@
 - (IBAction)cancelImagePickerBtnClicked:(UIButton *)sender;
 - (IBAction)multiSelectConfirmedSelectBtnClicked:(id)sender;
 - (IBAction)deleteAssetsBtnClicked:(id)sender;
+- (IBAction)multiSelectionByPanGesture:(UIPanGestureRecognizer *)sender;
 @end
 
 @interface ShowDetailViewControllerAnimation : NSObject<UIViewControllerAnimatedTransitioning>

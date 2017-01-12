@@ -68,16 +68,9 @@
         PHFetchResult *userAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:[album integerValue] options:nil];
         [userAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             PHAssetCollection *collection = obj;
-            PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
-            if(self.mediaTypeToUse != 3){
-                fetchOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType = %d", self.mediaTypeToUse];
-            }
-            else{
-                fetchOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType != %d", self.mediaTypeToUse];
-            }
-            PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:fetchOptions];
+            PHFetchResult *fetchResultForCount = [PHAsset fetchAssetInAssetCollection:collection withSortDescriptorKey:@"modificationDate" withMediaType:self.mediaTypeToUse withMediaSubtypes:self.mediaSubTypeToUse];
             //add albums which have at least one item in their album.
-            if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+            if(fetchResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
                 //PHAssetCollection *collection = obj;
                 //NSLog(@"%@",collection.localizedTitle);
                 [self.albumsArray addObject:obj];
@@ -89,16 +82,9 @@
         PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:[album integerValue] options:nil];
         [smartAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             PHAssetCollection *collection = obj;
-            PHFetchOptions *fetchOptions = [[PHFetchOptions alloc] init];
-            if(self.mediaTypeToUse != 3){
-                fetchOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType = %d", self.mediaTypeToUse];
-            }
-            else{
-                fetchOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType != %d", self.mediaTypeToUse];
-            }
-            PHFetchResult *fetchingResultForCount = [PHAsset fetchAssetsInAssetCollection:collection options:fetchOptions];
+            PHFetchResult *fetchResultForCount = [PHAsset fetchAssetInAssetCollection:collection withSortDescriptorKey:@"modificationDate" withMediaType:self.mediaTypeToUse withMediaSubtypes:self.mediaSubTypeToUse];
             //add albums which have at least one item in their album.
-            if(fetchingResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
+            if(fetchResultForCount.count > 0 && collection.assetCollectionSubtype != PHAssetCollectionSubtypeSmartAlbumUserLibrary){
                 //PHAssetCollection *collection = obj;
                 //NSLog(@"%@",collection.localizedTitle);
                 [self.albumsArray addObject:obj];
@@ -139,15 +125,7 @@
     cell.albumTitle.textColor = self.albumTitleColor;
     cell.albumCollection = collection;
     //get phasset for album cover image
-    PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
-    albumsFetchingOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
-    if(self.mediaTypeToUse != 3){
-        albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType = %d", self.mediaTypeToUse];
-    }
-    else{
-        albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType != %d", self.mediaTypeToUse];
-    }
-    PHFetchResult *assetResultForAlbumCover = [PHAsset fetchAssetsInAssetCollection:collection options:albumsFetchingOptions];
+    PHFetchResult *assetResultForAlbumCover = [PHAsset fetchAssetInAssetCollection:collection withSortDescriptorKey:nil withMediaType:self.mediaTypeToUse withMediaSubtypes:self.mediaSubTypeToUse];
     int albumCoverNumber = (int)assetResultForAlbumCover.count;
     if(albumCoverNumber > 3){
         albumCoverNumber = 3;
@@ -155,7 +133,7 @@
     NSMutableArray *assetForAlbumCover = [[NSMutableArray alloc] init];
     NSArray *arrayForCellImages = @[cell.imageView1, cell.imageView2, cell.imageView3];
     for (int i = 0 ; i < albumCoverNumber ; i ++){
-        [assetResultForAlbumCover enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndex:i] options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [assetResultForAlbumCover enumerateObjectsAtIndexes:[NSIndexSet indexSetWithIndex:assetResultForAlbumCover.count - 1 - i] options:NSEnumerationConcurrent usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [assetForAlbumCover addObject:obj];
         }];
     }
@@ -184,25 +162,24 @@
         imagePickerViewController.delegate = (id)self.callerController;
         //set mediatype
         imagePickerViewController.mediaTypeToUse = self.mediaTypeToUse;
+        imagePickerViewController.mediaSubTypeToUse = self.mediaSubTypeToUse;
         //set theme
         imagePickerViewController.theme = self.theme;
+        //set Cell pinch zoom option
+        imagePickerViewController.cellPinchZoomOn = self.cellPinchZoomOn;
+        //set number of cells in line of imagepicker
+        imagePickerViewController.numberOfCellsInLine = self.numberOfCellsInLine;
+        //set ImagePicker header height
+        imagePickerViewController.imagePickerHeaderHeight = self.imagePickerHeaderHeight;
         //get images from album
         FTAlbumListCollectionViewCell *cell = sender;
         imagePickerViewController.albumName = cell.albumTitle.text;
-        PHFetchOptions *albumsFetchingOptions = [[PHFetchOptions alloc] init];
-        albumsFetchingOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
-        if(self.mediaTypeToUse != 3){
-            albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType = %d", self.mediaTypeToUse];
-        }
-        else{
-            albumsFetchingOptions.predicate = [NSPredicate predicateWithFormat:@"mediaType != %d", self.mediaTypeToUse];
-        }
         if(cell.albumCollection.assetCollectionSubtype == PHAssetCollectionSubtypeAlbumSyncedAlbum){
             imagePickerViewController.syncedAlbum = YES;
         }
-        PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetsInAssetCollection:cell.albumCollection options:albumsFetchingOptions];
+        PHFetchResult *assetResultForAlbum = [PHAsset fetchAssetInAssetCollection:cell.albumCollection withSortDescriptorKey:nil withMediaType:self.mediaTypeToUse withMediaSubtypes:self.mediaSubTypeToUse];
         NSMutableArray *assetForAlbum = [[NSMutableArray alloc] init];
-        [assetResultForAlbum enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [assetResultForAlbum enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [assetForAlbum addObject:obj];
         }];
         imagePickerViewController.allAssets = assetForAlbum;

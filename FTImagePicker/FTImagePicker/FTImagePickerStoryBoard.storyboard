@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="HOd-xX-b8B">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16B2657" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="HOd-xX-b8B">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -178,6 +178,7 @@
                                     <outletCollection property="gestureRecognizers" destination="4Zq-Wf-JkX" appends="YES" id="nLc-fO-qTF"/>
                                     <outletCollection property="gestureRecognizers" destination="okw-ZB-d2C" appends="YES" id="MLu-1h-0Qw"/>
                                     <outletCollection property="gestureRecognizers" destination="AhX-qV-Lex" appends="YES" id="6qT-g9-x0c"/>
+                                    <outletCollection property="gestureRecognizers" destination="hXg-En-PkI" appends="YES" id="YzX-bB-Lzt"/>
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rnd-7c-nEn">
@@ -229,6 +230,7 @@
                         <outlet property="buttonBarView" destination="rnd-7c-nEn" id="zfp-C4-Njq"/>
                         <outlet property="deleteBtn" destination="Y6A-gK-ope" id="HuT-3K-Epb"/>
                         <outlet property="longPressGesture" destination="okw-ZB-d2C" id="v0u-2x-24E"/>
+                        <outlet property="panGestureForMultiSelection" destination="hXg-En-PkI" id="QGm-Ma-aHB"/>
                         <outlet property="selectBtn" destination="wL4-mF-YhO" id="nKN-yq-0r0"/>
                     </connections>
                 </viewController>
@@ -249,6 +251,12 @@
                         <action selector="cellZoomInOutPinch:" destination="kqN-Lu-1hX" id="hDZ-g0-Tsk"/>
                     </connections>
                 </pinchGestureRecognizer>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="hXg-En-PkI">
+                    <connections>
+                        <action selector="multiSelectionByPanGesture:" destination="kqN-Lu-1hX" id="PJd-yM-iii"/>
+                        <outlet property="delegate" destination="kqN-Lu-1hX" id="4oS-BX-OTg"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1288.8" y="89.505247376311857"/>
         </scene>

@@ -35,11 +35,28 @@
 - (IBAction)OpenImagePicker:(UIControl *)sender {
     FTImagePickerOptions *imagePickerOptions = [[FTImagePickerOptions alloc] init];
     imagePickerOptions.firstShowingController = FTImagePicker;
-    imagePickerOptions.multipleSelectOn = YES;
-    imagePickerOptions.multipleSelectMax = 9;
-    imagePickerOptions.multipleSelectMin = 3;
+    imagePickerOptions.multipleSelectOn = self.multiSelectSwitch.on;
+    if(self.multiSelectSwitch.on){
+        imagePickerOptions.multipleSelectMax = 9;
+        imagePickerOptions.multipleSelectMin = 3;
+    }
+    else{
+        imagePickerOptions.multipleSelectMin = 1;
+    }
+    if(self.mediaTypeSegment.selectedSegmentIndex == 0){
+        imagePickerOptions.mediaTypeToUse = ImagesOnly;
+    }
+    else if(self.mediaTypeSegment.selectedSegmentIndex == 1){
+        imagePickerOptions.mediaTypeToUse = VideosOnly;
+    }
+    else{
+        imagePickerOptions.mediaTypeToUse = ImagesAndVideos;
+    }
     imagePickerOptions.regularAlbums = @[@2,@3,@4, @5,@6];
     imagePickerOptions.theme = self.themeNumber;
+    imagePickerOptions.cellPinchZoomOn = NO;
+    imagePickerOptions.numberOfCellsInLine = 4;
+    //imagePickerOptions.mediaSubTypeToUse = @[@(PHAssetMediaSubtypePhotoLive), @(PHAssetMediaSubtypePhotoPanorama)];
     [FTImagePickerManager presentFTImagePicker:self withOptions:imagePickerOptions];
 }
 
@@ -61,7 +78,7 @@
     [arrayForImageViews addObject:self.imageView8];
     [arrayForImageViews addObject:self.imageView9];
     
-    for(int i = 0 ; i < 9 ; i++){
+    for(int i = 0 ; i < self.selectedAssets.count ; i++){
         PHAsset *asset = self.selectedAssets[i];
         UIImageView *tempImageView = arrayForImageViews[i];
         [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:tempImageView.bounds.size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {

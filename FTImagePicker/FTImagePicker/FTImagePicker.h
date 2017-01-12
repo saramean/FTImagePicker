@@ -82,11 +82,33 @@ typedef NS_ENUM(NSInteger, ImagePickerTheme) {
 //            VideosOnly = 2,
 //            ImagesAndVideos = 3,
 @property (assign, nonatomic) NSInteger mediaTypeToUse;
+/* Setting media Subtype to use
+        PHAssetMediaSubtypeNone               = 0,
+ 
+        // Photo subtypes
+        PHAssetMediaSubtypePhotoPanorama      = (1UL << 0),
+        PHAssetMediaSubtypePhotoHDR           = (1UL << 1),
+        PHAssetMediaSubtypePhotoScreenshot PHOTOS_AVAILABLE_IOS_TVOS(9_0, 10_0) = (1UL << 2),
+        PHAssetMediaSubtypePhotoLive PHOTOS_AVAILABLE_IOS_TVOS(9_1, 10_0) = (1UL << 3),
+        PHAssetMediaSubtypePhotoDepthEffect PHOTOS_AVAILABLE_IOS_TVOS(10_2, 10_1) = (1UL << 4),
+ 
+        // Video subtypes
+        PHAssetMediaSubtypeVideoStreamed      = (1UL << 16),
+        PHAssetMediaSubtypeVideoHighFrameRate = (1UL << 17),
+        PHAssetMediaSubtypeVideoTimelapse     = (1UL << 18), */
+/* Determines media subTypeToUse. Default is All of the subtypes */
+@property (strong, nonatomic) NSArray *mediaSubTypeToUse;
 /* Determines theme of image picker. Default value is White Version (0) */
 //          WhiteVersion = 0;
 //          BlackVersion = 1;
 @property (assign, nonatomic) ImagePickerTheme theme;
-
+/* Determines usage of cell pinch zoom. Default value is NO */
+@property (assign, nonatomic) BOOL cellPinchZoomOn;
+/* Determines number of cells in Line of ImagePicker. Default value is 3 */
+/* Minimum is 2 and Maximum is 6. if value is lower than 2, it becomes 2 and if value is over than 6, it becomes 6. */
+@property (assign, nonatomic) NSInteger numberOfCellsInLine;
+/* Determines HeaderSize of ImagePicker. Default value is 0 */
+@property (assign, nonatomic) CGFloat imagePickerHeaderHeight;
 @end
 
 

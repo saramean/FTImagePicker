@@ -14,6 +14,8 @@
 
 @property (weak, nonatomic) IBOutlet UISwitch *themeSwitch;
 @property (assign, nonatomic) NSInteger themeNumber;
+@property (weak, nonatomic) IBOutlet UISwitch *multiSelectSwitch;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *mediaTypeSegment;
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView1;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView2;

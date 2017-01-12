@@ -24,7 +24,11 @@
         self.regularAlbums = @[@2, @3, @4, @5, @6, @100, @101];
         self.smartAlbums = @[@200, @201, @202, @203, @204, @205, @206, @207, @208, @210, @211];
         self.mediaTypeToUse = ImagesOnly;
+        self.mediaSubTypeToUse = @[@(PHAssetMediaSubtypeNone), @(PHAssetMediaSubtypePhotoHDR), @(PHAssetMediaSubtypePhotoLive), @(PHAssetMediaSubtypePhotoPanorama), @(PHAssetMediaSubtypePhotoScreenshot), @(PHAssetMediaSubtypePhotoDepthEffect), @(PHAssetMediaSubtypeVideoHighFrameRate), @(PHAssetMediaSubtypeVideoStreamed), @(PHAssetMediaSubtypeVideoTimelapse)];
         self.theme = WhiteVersion;
+        self.cellPinchZoomOn = NO;
+        self.numberOfCellsInLine = 3;
+        self.imagePickerHeaderHeight = 0;
     }
     return self;
 }
@@ -60,6 +64,14 @@
         albumListViewController.multipleSelectOn = FTImagePickerViewController.multipleSelectOn;
         albumListViewController.multipleSelectMax = FTImagePickerViewController.multipleSelectMax;
         albumListViewController.multipleSelectMin = FTImagePickerViewController.multipleSelectMin;
+        //Cell Pinch Zoom setting
+        FTImagePickerViewController.cellPinchZoomOn = FTImagePickerOptions.cellPinchZoomOn;
+        albumListViewController.cellPinchZoomOn = FTImagePickerViewController.cellPinchZoomOn;
+        //Number of Cell in Line in ImagePicker
+        FTImagePickerViewController.numberOfCellsInLine = FTImagePickerOptions.numberOfCellsInLine;
+        if(FTImagePickerOptions.numberOfCellsInLine < 2) FTImagePickerOptions.numberOfCellsInLine = 2;
+        else if(FTImagePickerOptions.numberOfCellsInLine > 6) FTImagePickerOptions.numberOfCellsInLine = 6;
+        albumListViewController.numberOfCellsInLine = FTImagePickerViewController.numberOfCellsInLine;
         //Albums to use in albumlist
         //Camera Roll is added as a default album
         albumListViewController.useCameraRoll = FTImagePickerOptions.useCameraRoll;
@@ -69,9 +81,15 @@
         //Media type to use
         albumListViewController.mediaTypeToUse = FTImagePickerOptions.mediaTypeToUse;
         FTImagePickerViewController.mediaTypeToUse = albumListViewController.mediaTypeToUse;
+        //Media subtype to use
+        albumListViewController.mediaSubTypeToUse = FTImagePickerOptions.mediaSubTypeToUse;
+        FTImagePickerViewController.mediaSubTypeToUse = albumListViewController.mediaSubTypeToUse;
         //Theme of image picker
         albumListViewController.theme = FTImagePickerOptions.theme;
         FTImagePickerViewController.theme = albumListViewController.theme;
+        //ImagePicker Header Size
+        albumListViewController.imagePickerHeaderHeight = FTImagePickerOptions.imagePickerHeaderHeight;
+        FTImagePickerViewController.imagePickerHeaderHeight = albumListViewController.imagePickerHeaderHeight;
         
         //make a stack for showing appropriate ViewController for purpose of the app.
         //show album list first

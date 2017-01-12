@@ -19,6 +19,7 @@
 @property (nonatomic) NSInteger selectedItemCount;
 @property (strong, nonatomic) NSMutableDictionary *selectedItemsDictionary;
 @property (nonatomic) NSInteger mediaTypeToUse;
+@property (strong, nonatomic) NSArray *mediaSubTypeToUse;
 @property (strong, nonatomic) NSArray *regularAlbums;
 @property (strong, nonatomic) NSArray *smartAlbums;
 @property (strong, nonatomic) NSMutableArray *albumsArray;
@@ -27,5 +28,7 @@
 @property (assign, nonatomic) NSInteger theme;
 @property (strong, nonatomic) UIColor *albumTitleColor;
 @property (assign, nonatomic) CGColorRef albumCellBorderColor;
-
+@property (assign, nonatomic) BOOL cellPinchZoomOn;
+@property (assign, nonatomic) NSInteger numberOfCellsInLine;
+@property (assign, nonatomic) CGFloat imagePickerHeaderHeight;
 @end
